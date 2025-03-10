@@ -2,12 +2,20 @@ import { configureStore } from "@reduxjs/toolkit";
 import trendingReducer from "./Slices/trendingSlice";
 import cartReducer from "./Slices/cartSlice";
 import favoriteReducer from "./Slices/favoriteSlice"; // ✅ تأكد من صحة المسار
+import menReducer from "./Slices/menSlice";
+import kidsReducer from "./Slices/kidsSlice";
+import womenReducer from "./Slices/womenSlice";
+import saleReducer from "./Slices/saleSlice";
 
 const store = configureStore({
   reducer: {
+    sale: saleReducer,
+    women: womenReducer,
+    kids: kidsReducer,
+    men: menReducer,
     trending: trendingReducer,
     cart: cartReducer,
-    favorite: favoriteReducer// ✅ تحقق أنه مضاف هنا
+    favorite: favoriteReducer, // ✅ تحقق أنه مضاف هنا
   },
 });
 
