@@ -40,17 +40,24 @@ const SignUp = () => {
         "http://localhost:5000/api/users/register",
         data
       );
+
+      // Save the token to localStorage
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+
       Swal.fire({
         icon: "success",
         title: "Account Created!",
         text: response.data.message,
         confirmButtonText: "Login Now",
-      }).then(() => navigate("/login"));
+      }).then(() => navigate("/"));
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Signup Failed",
-        text: error.response.data.message,
+        text:
+          error.response?.data?.message || "An error occurred during signup.",
       });
     } finally {
       setIsLoading(false);

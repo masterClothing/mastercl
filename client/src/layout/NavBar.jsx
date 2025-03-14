@@ -1,40 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { ShoppingCart, Menu, X, Search, Heart, User, LogOut } from "lucide-react";
+import {
+  ShoppingCart,
+  Menu,
+  X,
+  Search,
+  Heart,
+  User,
+  LogOut,
+} from "lucide-react";
 import Logo from "../assets/Logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
   const navigate = useNavigate();
 
   // Get cart and favorite items count from Redux
   const cartItemsCount = useSelector((state) => state.cart.cartItems.length);
-  const favoriteItemsCount = useSelector((state) => state.favorite.favorite.length);
+  const favoriteItemsCount = useSelector(
+    (state) => state.favorite.favorite.length
+  );
 
-  // Check if user is logged in when the component loads
+  // Check if the user is logged in (token exists in localStorage)
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser);
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists
   }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleLogout = async () => {
-    try {
-      // 🛑 مسح الـ token من الـ cookies عبر الـ API
-      await axios.post("http://localhost:5000/api/users/logout", {}, { withCredentials: true });
+  const handleLogout = () => {
+    // Clear localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-      localStorage.removeItem("user"); // حذف بيانات المستخدم من localStorage
-      setUser(null);
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+    // Update state to reflect logout
+    setIsLoggedIn(false);
+
+    // Redirect to login page
+    navigate("/");
   };
 
   return (
@@ -88,7 +96,7 @@ const NavBar = () => {
                 </li>
 
                 {/* 👤 Profile (Visible only when logged in) */}
-                {user && (
+                {isLoggedIn && (
                   <li className="max-lg:py-2 px-4 cursor-pointer">
                     <Link to="/profile" className="relative flex items-center">
                       <User className="w-6 h-6 inline text-gray-800" />
@@ -97,7 +105,7 @@ const NavBar = () => {
                 )}
 
                 {/* 🔁 Login/Logout Button */}
-                {user ? (
+                {isLoggedIn ? (
                   <button
                     onClick={handleLogout}
                     className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-red-500 border border-red-600 rounded-lg hover:bg-red-600 transition-all"
@@ -142,27 +150,42 @@ const NavBar = () => {
           {/* Navigation Links */}
           <ul className="lg:flex lg:items-center lg:justify-center px-10 py-3 bg-[#fff] min-h-[46px] gap-4 max-lg:space-y-4 max-lg:fixed max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-lg max-lg:overflow-auto z-50">
             <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link to="/new" className="text-black text-[15px] font-medium block">
+              <Link
+                to="/new"
+                className="text-black text-[15px] font-medium block"
+              >
                 New Arrivals
               </Link>
             </li>
             <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link to="/men" className="text-black text-[15px] font-medium block">
+              <Link
+                to="/men"
+                className="text-black text-[15px] font-medium block"
+              >
                 Men
               </Link>
             </li>
             <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link to="/women" className="text-black text-[15px] font-medium block">
+              <Link
+                to="/women"
+                className="text-black text-[15px] font-medium block"
+              >
                 Women
               </Link>
             </li>
             <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link to="/kids" className="text-black text-[15px] font-medium block">
+              <Link
+                to="/kids"
+                className="text-black text-[15px] font-medium block"
+              >
                 Kids
               </Link>
             </li>
             <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link to="/sale" className="text-black text-[15px] font-medium block">
+              <Link
+                to="/sale"
+                className="text-black text-[15px] font-medium block"
+              >
                 Sale
               </Link>
             </li>

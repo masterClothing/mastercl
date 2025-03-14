@@ -30,9 +30,7 @@ exports.signup = async (req, res) => {
     // Generate JWT token
     const token = generateToken(newUser.id);
 
-    // Set token in cookies
-    res.cookie("token", token, { httpOnly: true, secure: false });
-
+    // Return token in the response
     res.status(201).json({ success: true, user: newUser, token });
   } catch (error) {
     res.status(500).json({ success: false, message: "Something went wrong" });
@@ -62,9 +60,7 @@ exports.login = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user.id);
 
-    // Set token in cookies
-    res.cookie("token", token, { httpOnly: true, secure: false });
-
+    // Return token in the response
     res.json({ success: true, user, token });
   } catch (error) {
     res.status(500).json({ success: false, message: "Something went wrong" });
@@ -91,6 +87,6 @@ exports.getProfile = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie("token");
+  // Since the token is not stored in cookies, there's no need to clear it
   res.json({ success: true, message: "Logged out successfully" });
 };

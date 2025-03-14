@@ -19,15 +19,16 @@ const Login = () => {
     setIsLoading(true);
 
     try {
+      console.log("Sending request with credentials:", credentials);
       const response = await axios.post(
         "http://localhost:5000/api/users/login",
-        credentials,
-        { withCredentials: true }
+        credentials
       );
+
+      console.log("Received response:", response.data);
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.token); // ✅ حفظ التوكن
-        localStorage.setItem("user", JSON.stringify(response.data.user));
 
         Swal.fire({
           icon: "success",
@@ -38,10 +39,13 @@ const Login = () => {
         });
       }
     } catch (error) {
+      console.error("Login error:", error);
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: "Invalid credentials",
+        text: error.response
+          ? error.response.data.message
+          : "Invalid credentials",
       });
     } finally {
       setIsLoading(false);

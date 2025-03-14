@@ -5,9 +5,7 @@ import axios from "axios";
 export const fetchKidsProducts = createAsyncThunk(
   "kids/fetchKidsProducts",
   async () => {
-    const response = await axios.get(
-      "http://localhost:5000/products/category/Kids"
-    );
+    const response = await axios.get("http://localhost:5000/api/category/Kids");
     return response.data.products; // Ensure API returns `{ success: true, products: [...] }`
   }
 );

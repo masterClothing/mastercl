@@ -5,9 +5,7 @@ import axios from "axios";
 export const fetchMenProducts = createAsyncThunk(
   "men/fetchMenProducts",
   async () => {
-    const response = await axios.get(
-      "http://localhost:5000/products/category/Men"
-    );
+    const response = await axios.get("http://localhost:5000/api/category/Men");
     return response.data.products; // Ensure API response includes `{ success: true, products: [...] }`
   }
 );
