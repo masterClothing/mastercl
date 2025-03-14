@@ -6,18 +6,14 @@ const NewArrivals = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/products/new-arrivals")
+      .get("http://localhost:5000/api/arrivals-products")
       .then((response) => {
         console.log("✅ API Response:", response.data);
-        if (response.data.success) {
-          setProducts(response.data.products);
-        } else {
-          console.error("❌ No new arrivals:", response.data.message);
-        }
+        setProducts(response.data);
       })
-      .catch((error) =>
-        console.error("❌ Error fetching new arrivals:", error)
-      );
+      .catch((error) => {
+        console.error("❌ Error fetching new arrivals:", error);
+      });
   }, []);
 
   return (
@@ -30,13 +26,9 @@ const NewArrivals = () => {
           products.map((product) => (
             <div key={product.id} className="border p-4 rounded-lg shadow-lg">
               <img
-                src={`http://localhost:5000/uploads/${product.image}`}
+                src=""
                 alt={product.name}
                 className="w-full h-40 object-cover rounded-md"
-                onError={(e) => {
-                  console.error("❌ Image not found:", e.target.src);
-                  e.target.src = "/placeholder.jpg"; // ✅ Fallback image
-                }}
               />
               <h2 className="text-xl font-semibold mt-2">{product.name}</h2>
               <p className="text-gray-600 mt-1">{product.description}</p>
