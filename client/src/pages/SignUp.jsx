@@ -25,6 +25,7 @@ const schema = yup.object({
 const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -132,6 +133,8 @@ const SignUp = () => {
                   </p>
                 )}
               </div>
+
+              {/* Password Input */}
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -152,13 +155,26 @@ const SignUp = () => {
                   </p>
                 )}
               </div>
-              <div>
+
+              {/* Confirm Password Input */}
+              <div className="relative">
                 <input
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   {...register("confirmPassword")}
                   placeholder="Confirm Password"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-3 text-gray-500"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
+                </button>
                 {errors.confirmPassword && (
                   <p className="text-sm text-red-600 mt-1">
                     {errors.confirmPassword.message}
