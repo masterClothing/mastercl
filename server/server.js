@@ -3,9 +3,10 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { sequelize } = require("./models");
-const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/CategoriesRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -15,9 +16,10 @@ app.use(cookieParser());
 app.use(cors());
 
 // ✅ Routes
-app.use("/api/users", userRoutes);
+app.use("/api/users", authRoutes);
 app.use("/api", productRoutes);
 app.use("/categories", categoryRoutes);
+app.use("/api", userRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: "❌ المسار غير موجود" });
