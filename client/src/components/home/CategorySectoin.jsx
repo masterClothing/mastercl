@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import C1 from "../../assets/Images/C1.png";
 import C2 from "../../assets/Images/C2.png";
 import C3 from "../../assets/Images/C3.png";
+import S2 from "../../assets/Images/S2.webp";
+
 
 const CategoryCard = ({
   title,
@@ -13,6 +15,8 @@ const CategoryCard = ({
   ctaColor = "bg-indigo-600",
   textColor = "text-gray-800",
   cardType = "standard",
+  isSale = false,
+  saleText = "",
 }) => {
   // Different card styles based on type
   const cardStyles = {
@@ -27,6 +31,19 @@ const CategoryCard = ({
     >
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+
+      {/* Sale badge */}
+      {isSale && (
+        <div className="absolute top-4 right-4 z-30 rotate-12 transform transition-transform group-hover:rotate-0 duration-300">
+          <div className="bg-red-600 text-white font-bold py-1.5 px-4 rounded-full shadow-lg flex items-center">
+            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd"></path>
+            </svg>
+            <span>SALE</span>
+            {saleText && <span className="ml-1 text-xs font-normal bg-white text-red-600 px-1.5 py-0.5 rounded-sm">{saleText}</span>}
+          </div>
+        </div>
+      )}
 
       {/* Content container */}
       <div className="absolute inset-0 p-6 flex flex-col justify-between z-20">
@@ -124,6 +141,18 @@ const CategorySection = () => {
       textColor: "text-gray-800",
       cardType: "standard",
     },
+    {
+      title: "Seasonal Sale",
+      category: "Limited Time Offers",
+      image: S2,
+      cta: "Shop Deals",
+      bgColor: "bg-red-50",
+      ctaColor: "bg-red-600",
+      textColor: "text-gray-800",
+      cardType: "standard",
+      isSale: true,
+      saleText: "UP TO 40%",
+    },
   ];
 
   return (
@@ -191,7 +220,7 @@ const CategorySection = () => {
             >
               <p className="text-sm font-medium text-gray-500">{stat.label}</p>
               <p className="mt-2 flex items-baseline">
-                <span className="text-3xl font-extrabold text-indigo-600">
+                <span className="text-3xl font-extrabold text-[#e7000b]">
                   {stat.value}
                 </span>
               </p>

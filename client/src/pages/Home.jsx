@@ -6,6 +6,7 @@ import Occasion from "../components/home/occasion";
 import Trending from "../components/home/trending";
 import DiscoverMore from "../components/home/discoverMore";
 
+
 const Home = () => {
   return (
     <div>
@@ -15,6 +16,7 @@ const Home = () => {
       <Occasion />
       <Trending />
       <DiscoverMore />
+      
     </div>
   );
 };
