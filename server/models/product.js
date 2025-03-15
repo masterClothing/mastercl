@@ -4,19 +4,16 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
-      // علاقة المنتج مع الفئة (واحد - متعدد)
+      // Product belongs to a single Category
       Product.belongsTo(models.Category, {
         foreignKey: "categoryId",
         as: "category",
       });
 
-      // علاقة المنتج مع المناسبات (متعدد - متعدد)
-      // through: "ProductOccasions" هو نفس اسم الجدول الوسيط
-      // foreignKey: "productId" هو اسم العمود داخل ذلك الجدول
-      Product.belongsToMany(models.Occasion, {
-        through: "ProductOccasions",
-        foreignKey: "productId",
-        as: "occasions",
+      // Product belongs to a single Occasion
+      Product.belongsTo(models.Occasion, {
+        foreignKey: "occasionId",
+        as: "occasion",
       });
     }
   }
@@ -67,6 +64,14 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      occasionId: {
+        type: DataTypes.INTEGER,
+        allowNull: false, // Change to true if optional
+        references: {
+          model: "Occasions",
+          key: "id",
+        },
+      },
       deletedAt: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -76,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Product",
       timestamps: true,
-      paranoid: true, // دعم الـ Soft Delete
+      paranoid: true, // Enable soft delete
     }
   );
 

@@ -25,10 +25,21 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Categories", // ✅ تأكد أن هذا الاسم يطابق الجدول الفعلي
+          model: "Categories",
           key: "id",
         },
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      occasionId: {
+        type: Sequelize.INTEGER,
+        allowNull: true, // Set to true if it should be optional
+        references: {
+          model: "Occasions",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       image: {
         type: Sequelize.STRING,
@@ -47,12 +58,12 @@ module.exports = {
       isNewArrival: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false, // ✅ تحديد المنتجات الجديدة
+        defaultValue: false,
       },
       onSale: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false, // ✅ تحديد المنتجات المخفضة
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,

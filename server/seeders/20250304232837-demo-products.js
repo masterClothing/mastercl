@@ -3,142 +3,153 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("Products", [
-      // ✅ ملابس رجالي
+      // ✅ Men's Clothing
       {
-        name: "تيشيرت قطن أسود",
-        description: "تيشيرت رجالي قطن 100% بتصميم كلاسيكي",
+        name: "Black Cotton T-Shirt",
+        description: "100% cotton classic t-shirt for men",
         price: 15.99,
         image: "mens_tshirt_black.jpg",
         stock: 50,
         categoryId: 1, // Men
+        occasionId: 1, // Example: Casual Wear
         isNewArrival: false,
         onSale: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "بنطلون جينز أزرق",
-        description: "بنطلون جينز مريح للرجال من ماركة مشهورة",
+        name: "Blue Jeans",
+        description: "Comfortable denim jeans for men",
         price: 39.99,
         image: "mens_jeans_blue.jpg",
         stock: 30,
         categoryId: 1,
-        isNewArrival: true, // ✅ منتج جديد
+        occasionId: 2, // Example: Everyday Wear
+        isNewArrival: true,
         onSale: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "جاكيت شتوي أسود",
-        description: "جاكيت رجالي مقاوم للبرد مصنوع من الصوف",
+        name: "Winter Black Jacket",
+        description: "Warm woolen winter jacket for men",
         price: 79.99,
         image: "mens_jacket_black.jpg",
         stock: 20,
         categoryId: 1,
+        occasionId: 2, // Example: Winter Wear
         isNewArrival: false,
-        onSale: true, // ✅ منتج في التخفيضات
+        onSale: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
 
-      // ✅ ملابس نسائي
+      // ✅ Women's Clothing
       {
-        name: "فستان سهرة أنيق",
-        description: "فستان نسائي فاخر مصنوع من الحرير بتصميم أنيق",
+        name: "Elegant Evening Dress",
+        description: "Luxury silk evening dress for women",
         price: 129.99,
         image: "womens_evening_dress.jpg",
         stock: 15,
         categoryId: 2, // Women
+        occasionId: 4, // Example: Party Wear
         isNewArrival: true,
         onSale: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "بلوزة حرير وردية",
-        description: "بلوزة حريرية ناعمة ومريحة بتصميم أنيق",
+        name: "Pink Silk Blouse",
+        description: "Soft and comfortable silk blouse",
         price: 25.99,
         image: "womens_silk_blouse.jpg",
         stock: 35,
         categoryId: 2,
+        occasionId: 1, // Example: Casual Wear
         isNewArrival: false,
         onSale: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
 
-      // ✅ ملابس أطفال
+      // ✅ Kids' Clothing
       {
-        name: "تيشيرت أطفال ملون",
-        description: "تيشيرت قطن 100% بألوان زاهية للأطفال",
+        name: "Colorful Kids T-Shirt",
+        description: "100% cotton colorful t-shirt for kids",
         price: 10.99,
         image: "kids_tshirt_colored.jpg",
         stock: 50,
         categoryId: 3, // Kids
+        occasionId: 3, // Example: Everyday Wear
         isNewArrival: true,
         onSale: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "بنطلون أطفال جينز",
-        description: "بنطلون جينز مريح وعالي الجودة للأطفال",
+        name: "Kids Blue Jeans",
+        description: "Comfortable and high-quality denim jeans for kids",
         price: 29.99,
         image: "kids_jeans_blue.jpg",
         stock: 30,
         categoryId: 3,
+        occasionId: 2, // Example: Everyday Wear
         isNewArrival: false,
         onSale: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
 
-      // ✅ منتجات ضمن قسم التخفيضات
+      // ✅ Sale Products
       {
-        name: "حذاء رياضي رجالي مخفض",
-        description: "حذاء رياضي مريح مصنوع من الجلد الصناعي",
+        name: "Men's Discounted Sneakers",
+        description: "Comfortable athletic shoes made from synthetic leather",
         price: 45.99,
         image: "mens_sneakers_sale.jpg",
         stock: 25,
-        categoryId: 4, // Sale
+        categoryId: 1, // Sale
+        occasionId: 2, // Example: Sportswear
         isNewArrival: false,
         onSale: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "حقيبة نسائية جلدية - خصم 40%",
-        description: "حقيبة يد أنيقة تناسب جميع المناسبات",
+        name: "Women's Leather Handbag - 40% Off",
+        description: "Elegant handbag for all occasions",
         price: 59.99,
         image: "womens_handbag_sale.jpg",
         stock: 15,
-        categoryId: 4,
+        categoryId: 2,
+        occasionId: 3, // Example: Party Wear
         isNewArrival: false,
         onSale: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
 
-      // ✅ منتجات جديدة (New Arrivals)
+      // ✅ New Arrivals
       {
-        name: "ساعة يد أنيقة للرجال",
-        description: "ساعة فاخرة مقاومة للماء بتصميم أنيق",
+        name: "Stylish Men's Watch",
+        description: "Luxury waterproof watch with an elegant design",
         price: 99.99,
         image: "mens_watch_new.jpg",
         stock: 10,
-        categoryId: 5, // New Arrivals
+        categoryId: 1, // New Arrivals
+        occasionId: 1, // Example: Formal Wear
         isNewArrival: true,
         onSale: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "نظارات شمسية نسائية جديدة",
-        description: "نظارات شمسية مع حماية UV",
+        name: "New Women's Sunglasses",
+        description: "UV-protected sunglasses",
         price: 35.99,
         image: "womens_sunglasses_new.jpg",
         stock: 20,
-        categoryId: 5,
+        categoryId: 2,
+        occasionId: 2, // Example: Summer Wear
         isNewArrival: true,
         onSale: false,
         createdAt: new Date(),

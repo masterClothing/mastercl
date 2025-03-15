@@ -4,7 +4,7 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Category extends Model {
     static associate(models) {
-      // علاقة واحد - متعدد مع المنتجات
+      // One Category can have multiple Products
       Category.hasMany(models.Product, {
         foreignKey: "categoryId",
         as: "products",

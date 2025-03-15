@@ -4,16 +4,14 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Occasion extends Model {
     static associate(models) {
-      // علاقة متعدد - متعدد مع المنتجات
-      // through: "ProductOccasions" هو اسم الجدول الوسيط
-      // foreignKey: "occasionId" هو اسم العمود داخل ذلك الجدول
-      Occasion.belongsToMany(models.Product, {
-        through: "ProductOccasions",
+      // One Occasion can have multiple Products
+      Occasion.hasMany(models.Product, {
         foreignKey: "occasionId",
         as: "products",
       });
     }
   }
+
   Occasion.init(
     {
       name: {
@@ -27,5 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Occasion",
     }
   );
+
   return Occasion;
 };
