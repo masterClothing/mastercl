@@ -81,7 +81,6 @@ const SignUp = () => {
       // If token is returned, save it to localStorage
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user_id", res.data.user.id);
       }
 
       Swal.fire({
