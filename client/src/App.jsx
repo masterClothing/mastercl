@@ -30,6 +30,9 @@ import Women from "./components/catagories/Women";
 import Kids from "./components/catagories/Kids";
 import Sale from "./components/catagories/Sale";
 import Profile from "./pages/Profile";
+import OccasionProducts from "./components/catagories/OccasionProducts";  
+import AllProducts from "./components/catagories/AllProducts";
+  
 
 function Layout() {
   const location = useLocation();
@@ -58,7 +61,9 @@ function Layout() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-       
+        <Route path="/occasion/:occasionName" element={<OccasionProducts />} />
+        <Route path="/products" element={<AllProducts />} />
+
         <Route path="/tech" element={<Tech />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/new" element={<NewArrivals />} />

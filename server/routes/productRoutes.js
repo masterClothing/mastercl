@@ -10,4 +10,21 @@ router.get("/category/:category", productController.getProductsByCategory);
 
 router.get("/arrivals-products", productController.getNewArrivals);
 
+router.post(
+  "/:productId/occasions/:occasionId",
+  productController.addOccasionToProduct
+);
+router.delete(
+  "/:productId/occasions/:occasionId",
+  productController.removeOccasionFromProduct
+);
+
+// جلب المناسبات لمنتج معين
+router.get("/:productId/occasions", productController.getOccasionsByProduct);
+
+// جلب المنتجات التابعة لمناسبة معينة
+// routes/productRoutes.js
+router.get("/occasions/:occasionName", productController.getProductsByOccasion);
+
+
 module.exports = router;

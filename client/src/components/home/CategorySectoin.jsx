@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import C1 from "../../assets/Images/C1.png";
 import C2 from "../../assets/Images/C2.png";
 import C3 from "../../assets/Images/C3.png";
-// import C4 from "../../assets/Image/C4.png";
-// import C5 from "../../assets/Image/C5.png";
-// import C6 from "../../assets/Image/C6.png";
 
 const CategoryCard = ({
   title,
@@ -13,125 +10,197 @@ const CategoryCard = ({
   image,
   cta,
   bgColor,
-  Color,
-  alignImage,
-  imageSize = "medium",
-  imageAlignment = "center",
-  cardIndex,
+  ctaColor = "bg-indigo-600",
+  textColor = "text-gray-800",
+  cardType = "standard",
 }) => {
-  const imageClass = `${
-    imageSize === "large" ? "scale-110 lg:mt-[-16]" : "scale-85"
-  } ${
-    cardIndex === 1 || cardIndex === 6
-      ? "absolute right-0 h-full w-1/2 object-cover"
-      : "flex justify-center items-center"
-  }`;
+  // Different card styles based on type
+  const cardStyles = {
+    featured: "lg:col-span-2 lg:h-96",
+    standard: "h-80",
+    compact: "h-64",
+  };
 
   return (
     <div
-      className={`hover:shadow-lg hover:-translate-y-1   relative p-4  rounded-lg shadow-md ${bgColor} flex flex-col h-[19rem] ${
-        cardIndex === 1 || cardIndex === 6 ? "lg:flex-row" : ""
-      }`}
+      className={`relative overflow-hidden group rounded-xl shadow-md transition-all duration-300 hover:shadow-xl ${bgColor} ${cardStyles[cardType]}`}
     >
-      <div className="flex-1">
-        <div className="text-sm text-gray-500 ">{category}</div>
-        <div className={`text-2xl font-bold ${Color}`}>{title}</div>
+      {/* Gradient overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+
+      {/* Content container */}
+      <div className="absolute inset-0 p-6 flex flex-col justify-between z-20">
+        <div>
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-800 mb-2">
+            {category}
+          </span>
+          <h3
+            className={`text-2xl lg:text-3xl font-bold ${textColor} group-hover:text-white transition-colors duration-300`}
+          >
+            {title}
+          </h3>
+        </div>
+
         {cta && (
-          <Link to="/shop">
-            <button className="mt-4 py-2 px-4 bg-[#D72638]  hover:opacity-80 w-36 text-white rounded-3xl">
+          <Link
+            to="/shop"
+            className="self-start mt-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"
+          >
+            <button
+              className={`py-2.5 px-6 ${ctaColor} hover:bg-opacity-90 text-white rounded-lg font-medium flex items-center`}
+            >
               {cta}
+              <svg
+                className="w-4 h-4 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                ></path>
+              </svg>
             </button>
           </Link>
         )}
       </div>
-      <div
-        className={`relative flex-1 ${
-          cardIndex === 1 || cardIndex === 6
-            ? "flex justify-end items-center"
-            : alignImage
-        }`}
-      >
-        <img
-          src={image}
-          alt={title}
-          className={`object-cover rounded-lg ${imageClass}`}
-          style={{ width: "100%", height: "100%" }}
-        />
-      </div>
+
+      {/* Image container */}
+      {cardType === "featured" ? (
+        <div className="absolute right-0 top-0 h-full w-1/2 lg:w-3/5">
+          <img
+            src={image}
+            alt={title}
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+      ) : (
+        <div className="absolute right-0 top-0 h-full w-full">
+          <img
+            src={image}
+            alt={title}
+            className="h-full w-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+      )}
     </div>
   );
 };
 
-const CategorySectoin = () => {
-  return (
-    <>
-      <div className="pt-[50rem] mt-16 px-4 sm:px-8 lg:pt-16 xl:px-40">
-        <div className="flex flex-col sm:flex-row sm:justify-between items-center">
-          <h2 className="text-lg sm:text-xl mr-4 font-semibold text-[#060640]">
-            Top Categories
-          </h2>
-          <Link
-            to="category/list"
-            className="flex items-center text-gray-600 hover:underline mt-4 sm:mt-0"
-          >
-            <span className="mr-2 text-[#515161]">See all resources</span>
-            <svg
-              className="w-4 h-4 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </Link>
-        </div>
-        <hr className="my-4 border-[#D72638] border-[2px]" />
-      </div>
+const CategorySection = () => {
+  // Define category data
+  const categories = [
+    {
+      title: "Women's Collection",
+      category: "Fashion",
+      image: C1,
+      cta: "Explore Collection",
+      bgColor: "bg-rose-50",
+      ctaColor: "bg-rose-600",
+      textColor: "text-gray-800",
+      cardType: "featured",
+    },
+    {
+      title: "Kids Essentials",
+      category: "Supplies & Apparel",
+      image: C2,
+      cta: "Shop Now",
+      bgColor: "bg-sky-50",
+      ctaColor: "bg-sky-600",
+      textColor: "text-gray-800",
+      cardType: "standard",
+    },
+    {
+      title: "Men's Style",
+      category: "Fashion & Accessories",
+      image: C3,
+      cta: "View Collection",
+      bgColor: "bg-amber-50",
+      ctaColor: "bg-amber-600",
+      textColor: "text-gray-800",
+      cardType: "standard",
+    },
+  ];
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4 md:px-10 lg:px-40 mt-10">
-        <div className="lg:col-span-2">
-          <CategoryCard
-            title="Women"
-            category="Women"
-            image={C1}
-            cta="Show More"
-            bgColor="bg-[#eeeeee]"
-            Color="text-[#646464]"
-            alignImage="flex justify-end"
-            imageSize="large"
-            imageAlignment="right"
-            cardIndex={1}
-          />
+  return (
+    <section className="py-16 bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        {/* Section header with animated underline */}
+        <div className="relative mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="text-sm font-medium text-indigo-600 tracking-wider uppercase">
+                Curated Collections
+              </span>
+              <h2 className="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
+                Top Categories
+              </h2>
+              <div className="mt-2 h-1 w-20 bg-indigo-600 rounded"></div>
+            </div>
+
+            <Link
+              to="/category/list"
+              className="group mt-6 sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-colors duration-300"
+            >
+              <span>View All Categories</span>
+              <svg
+                className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </Link>
+          </div>
         </div>
-        <CategoryCard
-          title="Kids"
-          category="Nutrition & Supplies"
-          image={C2}
-          bgColor="bg-[#d4edf8]"
-          Color="text-[#646464]"
-          alignImage="flex justify-center"
-          imageSize="large"
-          cardIndex={2}
-        />
-        <CategoryCard
-          title="Men"
-          category="Entertainment"
-          image={C3}
-          bgColor="bg-[#fef9c4]"
-          Color="text-[#646464]"
-          alignImage="flex justify-center"
-          imageSize="large"
-          cardIndex={3}
-        />
+
+        {/* Category grid with different layouts for responsive design */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {categories.map((category, index) => (
+            <div
+              key={category.title}
+              className={index === 0 ? "md:col-span-2 lg:col-span-2" : ""}
+            >
+              <CategoryCard {...category} />
+            </div>
+          ))}
+        </div>
+
+        {/* Stats section */}
+        <div className="mt-16 grid grid-cols-2 gap-0.5 md:grid-cols-4 bg-white rounded-xl overflow-hidden shadow">
+          {[
+            { label: "Categories", value: "25+" },
+            { label: "Products", value: "10,000+" },
+            { label: "Brands", value: "120+" },
+            { label: "Happy Customers", value: "50,000+" },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="bg-white px-4 py-6 sm:px-6 lg:px-8"
+            >
+              <p className="text-sm font-medium text-gray-500">{stat.label}</p>
+              <p className="mt-2 flex items-baseline">
+                <span className="text-3xl font-extrabold text-indigo-600">
+                  {stat.value}
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
-    </>
+    </section>
   );
 };
 
-export default CategorySectoin;
+export default CategorySection;

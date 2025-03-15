@@ -4,9 +4,19 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     static associate(models) {
+      // علاقة المنتج مع الفئة (واحد - متعدد)
       Product.belongsTo(models.Category, {
         foreignKey: "categoryId",
         as: "category",
+      });
+
+      // علاقة المنتج مع المناسبات (متعدد - متعدد)
+      // through: "ProductOccasions" هو نفس اسم الجدول الوسيط
+      // foreignKey: "productId" هو اسم العمود داخل ذلك الجدول
+      Product.belongsToMany(models.Occasion, {
+        through: "ProductOccasions",
+        foreignKey: "productId",
+        as: "occasions",
       });
     }
   }
@@ -43,11 +53,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       isNewArrival: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false, // ✅ دعم وصول المنتجات الجديدة
+        defaultValue: false,
       },
       onSale: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false, // ✅ دعم المنتجات المخفضة
+        defaultValue: false,
       },
       categoryId: {
         type: DataTypes.INTEGER,
@@ -66,7 +76,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Product",
       timestamps: true,
-      paranoid: true, // ✅ دعم Soft Delete
+      paranoid: true, // دعم الـ Soft Delete
     }
   );
 
