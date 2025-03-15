@@ -1,14 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Eye, EyeOff } from "lucide-react";
+// import Cookies from "js-cookie" (If you're using cookies for tokens)
 
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+
+  // If you're remembering user credentials in cookies, e.g.:
+  // const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    // Load the Google Identity Services script
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      // Initialize the Google sign-in
+      window.google.accounts.id.initialize({
+        client_id:
+          "268942872776-ulvhmack82ul53133h6fkdd4f7ehnsgb.apps.googleusercontent.com",
+        callback: handleGoogleLogin,
+        ux_mode: "popup",
+      });
+
+      // Render the button
+      window.google.accounts.id.renderButton(
+        document.getElementById("google-signin-btn"),
+        {
+          theme: "outline",
+          size: "large",
+          text: "signin_with",
+          shape: "pill",
+        }
+      );
+    };
+    document.body.appendChild(script);
+  }, []);
+
+  const handleGoogleLogin = async (googleResponse) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/users/google-login",
+        { credential: googleResponse.credential },
+        { withCredentials: true }
+      );
+
+      console.log("Google login response data:", res.data);
+
+      // Check if token is returned
+      if (res.data.token) {
+        // Save the token
+        localStorage.setItem("token", res.data.token);
+
+        // Save the user ID from res.data.user.id
+        localStorage.setItem("user_id", res.data.user.id);
+      }
+
+      // Success Alert
+      Swal.fire({
+        icon: "success",
+        title: "Access Granted",
+        text: "You've successfully accessed your EliteFit.",
+        background: "#ffffff", 
+        color: "#000000",
+        confirmButtonColor: "#61090b",
+      }).then(() => navigate("/"));
+    } catch (error) {
+      // Error Alert
+      Swal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: error.response?.data?.message || "Authentication failed.",
+        background: "#1a1a1a",
+        color: "#ffffff",
+        confirmButtonColor: "#61090b",
+      });
+    }
+  };
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -28,7 +102,9 @@ const Login = () => {
       console.log("Received response:", response.data);
 
       if (response.data.success) {
-        localStorage.setItem("token", response.data.token); // ✅ حفظ التوكن
+        localStorage.setItem("token", response.data.token);
+          console.log("Token stored in localStorage:", response.data.token);
+
 
         Swal.fire({
           icon: "success",
@@ -112,6 +188,11 @@ const Login = () => {
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
           </form>
+
+          {/* Google Sign-In Button Container */}
+          <div className="flex items-center justify-center mt-4">
+            <div id="google-signin-btn"></div>
+          </div>
 
           <p className="mt-6 text-center">
             Don't have an account?{" "}

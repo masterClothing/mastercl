@@ -7,19 +7,29 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/CategoriesRoutes");
 const userRoutes = require("./routes/userRoutes");
+const occasionRoutes = require("./routes/occasionRoutes");
 
 const app = express();
 
 // ✅ Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+
+
+// Replace with the exact origin(s) you want to allow
+const allowedOrigins = ["http://localhost:5173"];
+
+app.use(cors({
+  origin: allowedOrigins,   // cannot be '*'
+  credentials: true         // <--- Required for fetch/axios to include cookies
+}));
 
 // ✅ Routes
 app.use("/api/users", authRoutes);
 app.use("/api", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/api", userRoutes);
+app.use("/api/occasion", occasionRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: "❌ المسار غير موجود" });

@@ -6,9 +6,11 @@ import menReducer from "./Slices/menSlice";
 import kidsReducer from "./Slices/kidsSlice";
 import womenReducer from "./Slices/womenSlice";
 import saleReducer from "./Slices/saleSlice";
+import allProductsReducer from "./Slices/allProductsSlice";
 
 const store = configureStore({
   reducer: {
+    allProducts: allProductsReducer,
     sale: saleReducer,
     women: womenReducer,
     kids: kidsReducer,

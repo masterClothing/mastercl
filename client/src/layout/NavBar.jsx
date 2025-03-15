@@ -41,7 +41,7 @@ const NavBar = () => {
     // Update state to reflect logout
     setIsLoggedIn(false);
 
-    // Redirect to login page
+    // Redirect to home page (or login page)
     navigate("/");
   };
 
@@ -149,6 +149,40 @@ const NavBar = () => {
 
           {/* Navigation Links */}
           <ul className="lg:flex lg:items-center lg:justify-center px-10 py-3 bg-[#fff] min-h-[46px] gap-4 max-lg:space-y-4 max-lg:fixed max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-lg max-lg:overflow-auto z-50">
+            {/* Home */}
+            <li className="max-lg:border-b max-lg:py-3 px-3">
+              <Link to="/" className="text-black text-[15px] font-medium block">
+                Home
+              </Link>
+            </li>
+            {/* All Products */}
+            <li className="max-lg:border-b max-lg:py-3 px-3">
+              <Link
+                to="/products"
+                className="text-black text-[15px] font-medium block"
+              >
+                All Products
+              </Link>
+            </li>
+            {/* About */}
+            <li className="max-lg:border-b max-lg:py-3 px-3">
+              <Link
+                to="/about"
+                className="text-black text-[15px] font-medium block"
+              >
+                About
+              </Link>
+            </li>
+            {/* Contact */}
+            <li className="max-lg:border-b max-lg:py-3 px-3">
+              <Link
+                to="/contact"
+                className="text-black text-[15px] font-medium block"
+              >
+                Contact
+              </Link>
+            </li>
+            {/* New Arrivals */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/new"
@@ -157,6 +191,7 @@ const NavBar = () => {
                 New Arrivals
               </Link>
             </li>
+            {/* Men */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/men"
@@ -165,6 +200,7 @@ const NavBar = () => {
                 Men
               </Link>
             </li>
+            {/* Women */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/women"
@@ -173,6 +209,7 @@ const NavBar = () => {
                 Women
               </Link>
             </li>
+            {/* Kids */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/kids"
@@ -181,6 +218,7 @@ const NavBar = () => {
                 Kids
               </Link>
             </li>
+            {/* Sale */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/sale"

@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Users", {
@@ -22,12 +24,28 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true, // or false if you require password for all sign-ups
       },
       role: {
         type: Sequelize.STRING,
         defaultValue: "customer",
       },
+
+      // New fields for Google sign-in
+      username: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      googleId: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      isActivated: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -38,6 +56,7 @@ module.exports = {
       },
     });
   },
+
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Users");
   },
