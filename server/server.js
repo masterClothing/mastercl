@@ -15,14 +15,14 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 
-// Replace with the exact origin(s) you want to allow
-const allowedOrigins = ["http://localhost:5173"];
-
-app.use(cors({
-  origin: allowedOrigins,   // cannot be '*'
-  credentials: true         // <--- Required for fetch/axios to include cookies
-}));
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
 // ✅ Routes
 app.use("/api/users", authRoutes);

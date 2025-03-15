@@ -57,9 +57,6 @@ const Login = () => {
       if (res.data.token) {
         // Save the token
         localStorage.setItem("token", res.data.token);
-
-        // Save the user ID from res.data.user.id
-        localStorage.setItem("user_id", res.data.user.id);
       }
 
       // Success Alert
@@ -67,7 +64,7 @@ const Login = () => {
         icon: "success",
         title: "Access Granted",
         text: "You've successfully accessed your EliteFit.",
-        background: "#ffffff", 
+        background: "#ffffff",
         color: "#000000",
         confirmButtonColor: "#61090b",
       }).then(() => navigate("/"));
@@ -103,8 +100,7 @@ const Login = () => {
 
       if (response.data.success) {
         localStorage.setItem("token", response.data.token);
-          console.log("Token stored in localStorage:", response.data.token);
-
+        console.log("Token stored in localStorage:", response.data.token);
 
         Swal.fire({
           icon: "success",
