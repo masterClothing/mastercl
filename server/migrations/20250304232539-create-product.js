@@ -33,7 +33,7 @@ module.exports = {
       },
       occasionId: {
         type: Sequelize.INTEGER,
-        allowNull: true, // Set to true if it should be optional
+        allowNull: true,
         references: {
           model: "Occasions",
           key: "id",

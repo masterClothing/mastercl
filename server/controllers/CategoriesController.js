@@ -1,12 +1,12 @@
-const { Categories } = require("../models");
-
+const { Category } = require("../models");
 // ✅ جلب جميع الفئات
 exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Categories.findAll();
+    const categories = await Category.findAll(); // Use `Category`, not `Categories`
     res.json(categories);
   } catch (error) {
-    res.status(500).json({ message: "خطأ أثناء جلب الفئات", error });
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "خطأ أثناء جلب الفئات" });
   }
 };
 
@@ -14,7 +14,8 @@ exports.getAllCategories = async (req, res) => {
 exports.getCategoriesById = async (req, res) => {
   try {
     const Categories = await Categories.findByPk(req.params.id);
-    if (!Categories) return res.status(404).json({ message: "الفئة غير موجودة" });
+    if (!Categories)
+      return res.status(404).json({ message: "الفئة غير موجودة" });
     res.json(Categories);
   } catch (error) {
     res.status(500).json({ message: "خطأ أثناء جلب الفئة", error });
@@ -36,7 +37,8 @@ exports.createCategories = async (req, res) => {
 exports.updateCategories = async (req, res) => {
   try {
     const Categories = await Categories.findByPk(req.params.id);
-    if (!Categories) return res.status(404).json({ message: "الفئة غير موجودة" });
+    if (!Categories)
+      return res.status(404).json({ message: "الفئة غير موجودة" });
 
     const { name } = req.body;
     await Categories.update({ name });
@@ -50,7 +52,8 @@ exports.updateCategories = async (req, res) => {
 exports.deleteCategories = async (req, res) => {
   try {
     const Categories = await Categories.findByPk(req.params.id);
-    if (!Categories) return res.status(404).json({ message: "الفئة غير موجودة" });
+    if (!Categories)
+      return res.status(404).json({ message: "الفئة غير موجودة" });
 
     await Categories.destroy();
     res.json({ message: "تم حذف الفئة بنجاح" });
