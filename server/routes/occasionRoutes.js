@@ -3,7 +3,7 @@ const router = express.Router();
 const occasionController = require("../controllers/occasionController");
 
 // جلب جميع المناسبات
-router.get("/", occasionController.getAllOccasions);
+router.get("/get-all", occasionController.getAllOccasions);
 // جلب مناسبة واحدة بالـID
 router.get("/:id", occasionController.getOccasionById);
 // إنشاء مناسبة جديدة

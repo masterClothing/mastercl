@@ -1,4 +1,4 @@
-const { Product, Category , Occasion } = require("../models");
+const { Product, Category, Occasion } = require("../models");
 
 exports.getAllProducts = async (req, res) => {
   try {
@@ -77,8 +77,6 @@ exports.getNewArrivals = async (req, res) => {
   }
 };
 
-
-
 exports.addOccasionToProduct = async (req, res) => {
   try {
     const { productId, occasionId } = req.params;
@@ -102,13 +100,11 @@ exports.addOccasionToProduct = async (req, res) => {
 
     res.json({ success: true, message: "تم إضافة المناسبة للمنتج بنجاح" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "خطأ أثناء ربط المناسبة بالمنتج",
-        error,
-      });
+    res.status(500).json({
+      success: false,
+      message: "خطأ أثناء ربط المناسبة بالمنتج",
+      error,
+    });
   }
 };
 
@@ -170,12 +166,14 @@ exports.getProductsByOccasion = async (req, res) => {
     // ابحث عن المناسبة
     const occasion = await Occasion.findOne({ where: { name: occasionName } });
     if (!occasion) {
-      return res.status(404).json({ success: false, message: "المناسبة غير موجودة" });
+      return res
+        .status(404)
+        .json({ success: false, message: "المناسبة غير موجودة" });
     }
 
     // اجلب المنتجات المرتبطة بهذه المناسبة
-    const products = await occasion.getProducts(); 
-    // أو include: [{ model: Product, ...}] إن أحببت 
+    const products = await occasion.getProducts();
+    // أو include: [{ model: Product, ...}] إن أحببت
 
     res.json({ success: true, data: products });
   } catch (error) {
