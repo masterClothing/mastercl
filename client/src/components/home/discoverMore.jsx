@@ -40,6 +40,11 @@ const DiscoverMore = () => {
         {displayedItems.map((item) => {
           const isFavorite = favoriteItems.some((fav) => fav.id === item.id);
 
+          // Handle the image URL to ensure proper path
+          const imageUrl = item.image.startsWith("http")
+            ? item.image
+            : `http://localhost:5000/${item.image.replace(/\\/g, "/")}`;
+
           return (
             <div
               key={item.id}
@@ -53,7 +58,7 @@ const DiscoverMore = () => {
                 }
               >
                 <img
-                  src={item.image}
+                  src={imageUrl} // Use the corrected image URL here
                   alt={item.name}
                   className="w-full object-cover object-top aspect-[230/307]"
                 />

@@ -43,21 +43,25 @@ const Occasion = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-24 bg-gradient-to-b bg-[#fff] relative overflow-hidden">
+      {/* Background decorative elements - matching CategorySection */}
+      <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-[#F0BB78]/5 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#F0BB78]/5 blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent text-sm font-semibold uppercase tracking-wider">
+        {/* Section Header - updated to match CategorySection */}
+        <div className="text-center mb-16">
+          <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-sm font-semibold tracking-wide uppercase shadow-sm">
             Curated Collections
           </span>
-          <h2 className="mt-3 text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl md:text-6xl">
+          <h2 className="mt-4 text-4xl sm:text-5xl font-bold text-black leading-tight">
             Shop by Occasion
           </h2>
-          <p className="mt-5 max-w-xl mx-auto text-xl text-gray-500">
+          <div className="mt-4 mx-auto h-1 w-24 bg-[#F0BB78] rounded-full shadow-lg"></div>
+          <p className="mt-8 text-xl text-black max-w-2xl mx-auto leading-relaxed">
             Discover perfectly curated outfits for every moment and season in
             your life
           </p>
-          <div className="mt-6 mx-auto w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
         </div>
 
         {/* Occasion Cards Grid */}
@@ -65,42 +69,59 @@ const Occasion = () => {
           {occasions.map((occasion, index) => (
             <div
               key={index}
-              className="group relative h-96 rounded-2xl overflow-hidden shadow-lg transition-all duration-500 ease-in-out transform hover:-translate-y-2"
+              className="relative h-110 rounded-xl overflow-hidden group transition-all duration-500 
+              bg-[#181818] 
+              shadow-[0_10px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(240,187,120,0.05)] 
+              hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_0_1px_rgba(240,187,120,0.1)] 
+              transform hover:-translate-y-1"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               onClick={() => handleOccasionClick(occasion.name)}
             >
+              {/* Subtle border glow effect - matching CategoryCard */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-xl pointer-events-none"
+                style={{
+                  boxShadow:
+                    "0 0 15px 2px rgba(240,187,120,0.3), inset 0 0 0 1px rgba(240,187,120,0.2)",
+                  transition: "opacity 0.7s ease",
+                }}
+              ></div>
+
               {/* Card Background */}
               <div className="absolute inset-0">
                 <img
-                  className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
                   src={occasion.image}
                   alt={occasion.name}
+                  style={{ filter: "brightness(0.8) contrast(1.1)" }}
                 />
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-300"></div>
+                {/* Gradient Overlay - updated to match CategoryCard */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/90 via-[#000000]/60 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-700 z-10"></div>
               </div>
 
-              {/* Badge */}
-              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-medium text-gray-900 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+              {/* Badge - updated styling */}
+              <div className="absolute top-4 right-4 bg-[#F0BB78] text-[#000000] px-3 py-1 rounded-full text-sm font-medium shadow-md transform rotate-12 group-hover:rotate-0 group-hover:scale-110 transition-all duration-500 z-20">
                 {occasion.tagline}
               </div>
 
-              {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col items-start transition-transform duration-300 ease-in-out">
-                {/* Title with animated underline */}
-                <h3 className="text-2xl font-bold text-white mb-2 relative">
-                  {occasion.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full"></span>
-                </h3>
+              {/* Content - updated to match CategoryCard styling */}
+              <div className="absolute inset-0 p-6 flex flex-col justify-between z-20">
+                <div>
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-[#F0BB78]/20 text-white mb-2 shadow-md transform translate-y-1 opacity-80 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+                    {occasion.name}
+                  </span>
+                  <h3 className="text-2xl lg:text-3xl font-bold text-white group-hover:text-[#F0BB78] transition-colors duration-500 drop-shadow-md transform group-hover:-translate-y-1">
+                    {occasion.name} Collection
+                  </h3>
+                  {/* Description with reveal animation */}
+                  <p className="text-white/90 mt-2 transform transition-all duration-300 ease-in-out opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0">
+                    {occasion.description}
+                  </p>
+                </div>
 
-                {/* Description with reveal animation */}
-                <p className="text-white/90 mb-4 transform transition-all duration-300 ease-in-out opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0">
-                  {occasion.description}
-                </p>
-
-                {/* Button */}
-                <button className="px-4 py-2 bg-white text-gray-900 rounded-lg font-medium transform transition-all duration-300 ease-in-out opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 hover:bg-gray-50 flex items-center">
+                {/* Button - updated styling */}
+                <button className="mt-4 self-start bg-[#F0BB78] text-[#000000] px-4 py-2 rounded-lg font-semibold transform transition-all duration-300 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] hover:-translate-y-1 flex items-center">
                   Explore Collection
                   <svg
                     className="ml-2 w-4 h-4 transition-transform duration-300 transform group-hover:translate-x-1"
@@ -122,44 +143,67 @@ const Occasion = () => {
               {/* Pulsing Indicator */}
               {hoveredIndex === index && (
                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                  <div className="h-24 w-24 rounded-full border-2 border-white opacity-0 animate-ping"></div>
+                  <div className="h-24 w-24 rounded-full border-2 border-[#F0BB78] opacity-0 animate-ping"></div>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        {/* Featured Seasonal Banner */}
-        <div className="mt-16 relative overflow-hidden rounded-2xl shadow-2xl">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-700 p-8 md:p-12 lg:p-16">
+        {/* Featured Seasonal Banner - updated styling */}
+        <div className="mt-16 relative overflow-hidden rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform hover:scale-[1.02] transition-all duration-500 bg-gradient-to-r from-[#181818] to-[#252525]">
+          <div className="p-8 md:p-12 lg:p-16">
             <div className="relative z-10 max-w-3xl">
               <h3 className="text-3xl font-bold text-white mb-4">
                 Seasonal Specials
               </h3>
-              <p className="text-indigo-100 text-lg mb-6">
+              <p className="text-[#F0BB78]/90 text-lg mb-6">
                 Discover curated collections for every season with exclusive
                 discounts and early access to new arrivals.
               </p>
               <button
                 onClick={() => navigate("/seasonal-specials")}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-indigo-700 bg-white hover:bg-indigo-50 transition-colors duration-300"
+                className="bg-[#F0BB78] text-[#000000] font-semibold py-3 px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center"
               >
                 View Seasonal Offers
+                <svg
+                  className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
               </button>
             </div>
             {/* Decorative Elements */}
-            <div className="absolute right-0 bottom-0 h-64 w-64 bg-white opacity-10 rounded-full -mb-16 -mr-16"></div>
-            <div className="absolute right-32 top-0 h-40 w-40 bg-white opacity-10 rounded-full -mt-16 -mr-16"></div>
+            <div className="absolute right-0 bottom-0 h-64 w-64 bg-[#F0BB78] opacity-5 rounded-full -mb-16 -mr-16"></div>
+            <div className="absolute right-32 top-0 h-40 w-40 bg-[#F0BB78] opacity-5 rounded-full -mt-16 -mr-16"></div>
           </div>
         </div>
 
-        {/* Testimonial */}
-        <div className="mt-16 text-center">
-          <p className="italic text-lg text-gray-600">
+        {/* Testimonial - updated styling */}
+        <div className="mt-16 text-center bg-[#181818] p-8 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.3)] border border-[#F0BB78]/10">
+          <svg
+            className="w-12 h-12 text-[#F0BB78] mx-auto mb-4"
+            fill="currentColor"
+            viewBox="0 0 32 32"
+          >
+            <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+          </svg>
+          <p className="italic text-lg text-white/80">
             "I absolutely love how I can shop by occasion. It's made finding the
             perfect outfit so much easier!"
           </p>
-          <div className="mt-2 font-medium text-gray-900">
+          <div className="mt-2 font-medium text-white flex items-center justify-center">
+            <span className="h-8 w-8 rounded-full bg-[#F0BB78] text-[#000000] flex items-center justify-center text-sm font-semibold mr-2 shadow-md">
+              SD
+            </span>
             — Sarah D., Loyal Customer
           </div>
         </div>

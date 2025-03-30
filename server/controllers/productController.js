@@ -77,6 +77,23 @@ exports.getNewArrivals = async (req, res) => {
   }
 };
 
+
+exports.getNewSale = async (req, res) => {
+  try {
+    const newSale = await Product.findAll({
+      where: {
+        onSale: true,
+      },
+      include: [{ model: Category, as: "category" }],
+    });
+
+    res.status(200).json(newSale);
+  } catch (error) {
+    console.error("Error fetching new arrivals:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.addOccasionToProduct = async (req, res) => {
   try {
     const { productId, occasionId } = req.params;

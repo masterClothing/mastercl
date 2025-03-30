@@ -9,7 +9,7 @@ import {
   FaCcMastercard,
   FaCcPaypal,
 } from "react-icons/fa";
-import Logo from "../assets/Logo.svg";
+import Logo from "../assets/elitefit-logo.svg"; // Updated logo import
 
 const Footer = () => {
   return (
@@ -92,7 +92,7 @@ const Footer = () => {
                 placeholder="Enter your email"
                 className="w-full p-2 text-black rounded-l-md focus:outline-none"
               />
-              <button className="bg-red-500 px-4 text-white rounded-r-md hover:bg-red-600 transition">
+              <button className="bg-[#F0BB78] px-4 text-white rounded-r-md hover:bg-[#F0BB60] transition">
                 Subscribe
               </button>
             </form>
@@ -172,3 +172,26 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

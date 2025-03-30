@@ -7,8 +7,12 @@ const cartSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
+      // Check for an existing item with the same product id and options
       const existingItem = state.cartItems.find(
-        (item) => item.id === action.payload.id
+        (item) =>
+          item.id === action.payload.id &&
+          item.selectedSize === action.payload.selectedSize &&
+          item.selectedColor === action.payload.selectedColor
       );
       if (existingItem) {
         existingItem.quantity += 1;
@@ -28,12 +32,26 @@ const cartSlice = createSlice({
         item.quantity = quantity;
       }
     },
+    updateOptions: (state, action) => {
+      // Update the selected size and color for a given cart item
+      const { id, selectedSize, selectedColor } = action.payload;
+      const item = state.cartItems.find((item) => item.id === id);
+      if (item) {
+        item.selectedSize = selectedSize;
+        item.selectedColor = selectedColor;
+      }
+    },
     clearCart: (state) => {
       state.cartItems = [];
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  updateOptions,
+  clearCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;
