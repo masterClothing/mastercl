@@ -60,31 +60,82 @@ const updateProduct = async (req, res) => {
   try {
     upload(req, res, async (err) => {
       if (err) {
-        return res.status(400).json({ message: err });
+        return res.status(400).json({
+          success: false,
+          message: "File upload error",
+          error: err.message,
+        });
       }
 
       const { id } = req.params;
-      const updateData = req.body;
+      let updateData = req.body;
 
+      // Convert status to boolean if it's provided
+      if (updateData.status !== undefined) {
+        updateData.status =
+          updateData.status === "true" ||
+          updateData.status === true ||
+          updateData.status === "active";
+      }
+
+      // Handle file upload if present
       if (req.file) {
+        // Remove old image if exists (optional)
+        const existingProduct = await Product.findByPk(id);
+        if (existingProduct && existingProduct.image) {
+          const fs = require("fs");
+          const path = require("path");
+          const oldImagePath = path.join(
+            __dirname,
+            "..",
+            existingProduct.image
+          );
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
+        }
         updateData.image = req.file.path;
       }
 
+      // Validate required fields
+      if (!updateData.name || !updateData.price || !updateData.stock) {
+        return res.status(400).json({
+          success: false,
+          message: "Name, price and stock are required fields",
+        });
+      }
+
+      // Convert numeric fields
+      updateData.price = parseFloat(updateData.price);
+      updateData.stock = parseInt(updateData.stock);
+
+      // Update product
       const [updated] = await Product.update(updateData, {
         where: { id },
       });
 
-      if (updated) {
-        const updatedProduct = await Product.findByPk(id);
-        return res.status(200).json({
-          message: "Product updated successfully",
-          product: updatedProduct,
+      if (!updated) {
+        return res.status(404).json({
+          success: false,
+          message: "Product not found",
         });
       }
-      return res.status(404).json({ message: "Product not found" });
+
+      // Return updated product
+      const updatedProduct = await Product.findByPk(id);
+      return res.status(200).json({
+        success: true,
+        message: "Product updated successfully",
+        product: updatedProduct,
+      });
     });
   } catch (error) {
-    res.status(500).json({ message: "Error updating product", error });
+    console.error("Error updating product:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
 
