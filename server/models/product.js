@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       occasionId: {
         type: DataTypes.INTEGER,
-        allowNull: false, // Change to true if optional
+        allowNull: false,
         references: {
           model: "Occasions",
           key: "id",
@@ -81,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Product",
       timestamps: true,
-      paranoid: true, // Enable soft delete
+      paranoid: true,
     }
   );
 

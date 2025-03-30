@@ -8,73 +8,83 @@ import {
   User,
   LogOut,
 } from "lucide-react";
-import Logo from "../assets/Logo.svg";
+import Logo from "../assets/elitefit-logo.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setSearchQuery, setIsSearching } from "../Slices/searchSlice";
+import { searchProducts } from "../api/products";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Get cart and favorite items count from Redux
+  // Get data from Redux
   const cartItemsCount = useSelector((state) => state.cart.cartItems.length);
   const favoriteItemsCount = useSelector(
     (state) => state.favorite.favorite.length
   );
+  const searchQuery = useSelector((state) => state.search.query);
 
-  // Check if the user is logged in (token exists in localStorage)
+  // Check login status
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Set isLoggedIn to true if token exists
+    setIsLoggedIn(!!token);
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handleLogout = () => {
-    // Clear localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
-    // Update state to reflect logout
     setIsLoggedIn(false);
-
-    // Redirect to home page (or login page)
     navigate("/");
+  };
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    dispatch(setSearchQuery(query));
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      navigate("/search");
+      setIsMenuOpen(false);
+    }
   };
 
   return (
     <>
-      <section className="py-3 bg-[#D80D18] text-white text-center px-10">
+      <section className="py-3 bg-[#F0BB78] text-black text-center px-10">
         <p className="text-sm">Get free delivery for first order over 100 JD</p>
       </section>
 
       <header className="shadow-lg font-[sans-serif] tracking-wide relative z-50">
         <section className="flex items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[70px] max-lg:min-h-[60px]">
-          {/* Logo */}
           <Link to="/" className="shrink-0">
-            <img src={Logo} alt="logo" className="w-[150px]" />
+            <img src={Logo} alt="EliteFit logo" className="w-[180px]" />
           </Link>
 
           <div className="flex flex-wrap w-full items-center">
-            {/* Search Bar */}
+            {/* Updated Search Bar */}
             <div className="xl:w-80 max-lg:hidden lg:ml-10 max-md:mt-4 relative flex items-center">
               <input
                 type="text"
                 placeholder="Search for clothes..."
                 className="w-full bg-gray-100 border px-4 pl-10 rounded h-10 outline-none text-sm transition-all"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchSubmit}
               />
               <Search className="w-5 h-5 absolute left-3 text-gray-500" />
             </div>
 
             <div className="ml-auto">
               <ul className="flex items-center">
-                {/* ❤️ Favorite Products */}
                 <li className="max-lg:py-2 px-4 cursor-pointer">
                   <Link to="/favorite" className="relative flex items-center">
-                    <Heart className="w-6 h-6 inline text-red-500" />
+                    <Heart className="w-6 h-6 inline text-[#F0BB78]" />
                     {favoriteItemsCount > 0 && (
                       <span className="absolute left-auto -ml-1 -top-2 rounded-full bg-red-500 px-2 py-0 text-xs text-white">
                         {favoriteItemsCount}
@@ -83,7 +93,6 @@ const NavBar = () => {
                   </Link>
                 </li>
 
-                {/* 🛒 Shopping Cart */}
                 <li className="max-lg:py-2 px-4 cursor-pointer">
                   <Link to="/cart" className="relative flex items-center">
                     <ShoppingCart className="w-6 h-6 inline" />
@@ -95,7 +104,6 @@ const NavBar = () => {
                   </Link>
                 </li>
 
-                {/* 👤 Profile (Visible only when logged in) */}
                 {isLoggedIn && (
                   <li className="max-lg:py-2 px-4 cursor-pointer">
                     <Link to="/profile" className="relative flex items-center">
@@ -104,7 +112,6 @@ const NavBar = () => {
                   </li>
                 )}
 
-                {/* 🔁 Login/Logout Button */}
                 {isLoggedIn ? (
                   <button
                     onClick={handleLogout}
@@ -122,7 +129,6 @@ const NavBar = () => {
                   </Link>
                 )}
 
-                {/* Mobile Menu Toggle */}
                 <li className="lg:hidden cursor-pointer">
                   <button onClick={toggleMenu}>
                     <Menu className="w-7 h-7" />
@@ -133,13 +139,12 @@ const NavBar = () => {
           </div>
         </section>
 
-        {/* Mobile & Desktop Menu */}
+        {/* Mobile Menu */}
         <div
           className={`${
             isMenuOpen ? "block" : "hidden"
           } lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-50 max-lg:before:inset-0 max-lg:before:z-50`}
         >
-          {/* Close Button */}
           <button
             className="lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border cursor-pointer"
             onClick={toggleMenu}
@@ -147,15 +152,27 @@ const NavBar = () => {
             <X className="w-5 h-5" />
           </button>
 
-          {/* Navigation Links */}
+          {/* Mobile Search Bar */}
+          <div className="lg:hidden px-6 py-4">
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                placeholder="Search for clothes..."
+                className="w-full bg-gray-100 border px-4 pl-10 rounded h-10 outline-none text-sm transition-all"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchSubmit}
+              />
+              <Search className="w-5 h-5 absolute left-3 text-gray-500" />
+            </div>
+          </div>
+
           <ul className="lg:flex lg:items-center lg:justify-center px-10 py-3 bg-[#fff] min-h-[46px] gap-4 max-lg:space-y-4 max-lg:fixed max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-lg max-lg:overflow-auto z-50">
-            {/* Home */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link to="/" className="text-black text-[15px] font-medium block">
                 Home
               </Link>
             </li>
-            {/* All Products */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/products"
@@ -164,25 +181,6 @@ const NavBar = () => {
                 All Products
               </Link>
             </li>
-            {/* About */}
-            <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link
-                to="/about"
-                className="text-black text-[15px] font-medium block"
-              >
-                About
-              </Link>
-            </li>
-            {/* Contact */}
-            <li className="max-lg:border-b max-lg:py-3 px-3">
-              <Link
-                to="/contact"
-                className="text-black text-[15px] font-medium block"
-              >
-                Contact
-              </Link>
-            </li>
-            {/* New Arrivals */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/new"
@@ -191,7 +189,6 @@ const NavBar = () => {
                 New Arrivals
               </Link>
             </li>
-            {/* Men */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/men"
@@ -200,7 +197,6 @@ const NavBar = () => {
                 Men
               </Link>
             </li>
-            {/* Women */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/women"
@@ -209,7 +205,6 @@ const NavBar = () => {
                 Women
               </Link>
             </li>
-            {/* Kids */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/kids"
@@ -218,13 +213,28 @@ const NavBar = () => {
                 Kids
               </Link>
             </li>
-            {/* Sale */}
             <li className="max-lg:border-b max-lg:py-3 px-3">
               <Link
                 to="/sale"
                 className="text-black text-[15px] font-medium block"
               >
                 Sale
+              </Link>
+            </li>
+            <li className="max-lg:border-b max-lg:py-3 px-3">
+              <Link
+                to="/contact"
+                className="text-black text-[15px] font-medium block"
+              >
+                Contact
+              </Link>
+            </li>
+            <li className="max-lg:border-b max-lg:py-3 px-3">
+              <Link
+                to="/about"
+                className="text-black text-[15px] font-medium block"
+              >
+                About
               </Link>
             </li>
           </ul>

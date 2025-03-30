@@ -10,6 +10,9 @@ router.get("/category/:category", productController.getProductsByCategory);
 
 router.get("/arrivals-products", productController.getNewArrivals);
 
+router.get("/sale-products", productController.getNewSale);
+
+
 router.post(
   "/:productId/occasions/:occasionId",
   productController.addOccasionToProduct

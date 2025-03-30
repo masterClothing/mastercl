@@ -8,9 +8,10 @@ const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/CategoriesRoutes");
 const userRoutes = require("./routes/userRoutes");
 const occasionRoutes = require("./routes/occasionRoutes");
-
-
-
+const productsRoutes = require("./routes/productsRoutes");
+const orderRoutes = require("./routes/orderRoutes")
+const commentRoutes = require("./routes/commentRoutes"); // Import the comment routes
+const commentReportRoutes = require("./routes/commentReportRoutes");
 
 
 
@@ -35,9 +36,14 @@ app.use("/api", productRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/api", userRoutes);
 app.use("/api/occasion", occasionRoutes);
+app.use("/api", productsRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api", commentRoutes); // Add the comment routes
+app.use("/api/comment-reports", commentReportRoutes);
 
 
 
+app.use("/uploads", express.static("uploads"));
 
 
 const PORT = process.env.PORT || 5000;

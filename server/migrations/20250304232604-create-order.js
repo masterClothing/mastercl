@@ -16,6 +16,18 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
+      productIds: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER),
+        allowNull: false,
+      },
+      size: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: true,
+      },
+      color: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: true,
+      },
       total: {
         type: Sequelize.DECIMAL,
         allowNull: false,
@@ -23,6 +35,26 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         defaultValue: "pending",
+      },
+      shippingName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      shippingAddress: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      shippingCity: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      shippingState: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      shippingPostalCode: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +66,7 @@ module.exports = {
       },
     });
   },
+
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Orders");
   },

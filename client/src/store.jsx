@@ -5,13 +5,15 @@ import favoriteReducer from "./Slices/favoriteSlice"; // ✅ تأكد من صح�
 import menReducer from "./Slices/menSlice";
 import kidsReducer from "./Slices/kidsSlice";
 import womenReducer from "./Slices/womenSlice";
-import saleReducer from "./Slices/saleSlice";
+// import saleReducer from "./Slices/saleSlice";
 import allProductsReducer from "./Slices/allProductsSlice";
+import searchReducer from "./Slices/searchSlice";
 
 const store = configureStore({
   reducer: {
     allProducts: allProductsReducer,
-    sale: saleReducer,
+    // sale: saleReducer,
+    search: searchReducer,
     women: womenReducer,
     kids: kidsReducer,
     men: menReducer,
