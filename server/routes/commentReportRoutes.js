@@ -10,7 +10,12 @@ router.post("/", authMiddleware, commentReportController.createReport);
 
 // Routes without admin checks
 router.get("/", authMiddleware, commentReportController.getAllReports);
+router.get(
+  "/comments-with-reports",
+  commentReportController.getAllCommentsWithReports
+);
 router.put("/:id", authMiddleware, commentReportController.updateReportStatus);
 router.delete("/:id", authMiddleware, commentReportController.deleteReport);
+router.delete("/comment/:id", commentReportController.deleteComment);
 
 module.exports = router;
