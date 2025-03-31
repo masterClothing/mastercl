@@ -17,6 +17,8 @@ import { searchProducts } from "../api/products";
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [ads, setAds] = useState([]);
+  const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -54,10 +56,45 @@ const NavBar = () => {
     }
   };
 
+  useEffect(() => {
+    // Fetch ads from API
+    const fetchAds = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/ads");
+        const data = await response.json();
+        setAds(data);
+      } catch (error) {
+        console.error("Error fetching ads:", error);
+      }
+    };
+
+    fetchAds();
+  }, []);
+
+  useEffect(() => {
+    // Rotate through ads every few seconds if there are multiple
+    if (ads.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentAdIndex((prevIndex) => (prevIndex + 1) % ads.length);
+      }, 5000); // Change ad every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [ads]);
+
+  if (ads.length === 0) {
+    // Fallback if no ads are loaded
+    return (
+      <section className="py-3 bg-[#F0BB78] text-black text-center px-10">
+        <p className="text-sm">Get free delivery for first order over 100 JD</p>
+      </section>
+    );
+  }
+
   return (
     <>
       <section className="py-3 bg-[#F0BB78] text-black text-center px-10">
-        <p className="text-sm">Get free delivery for first order over 100 JD</p>
+        <p className="text-sm">{ads[currentAdIndex]?.description}</p>
       </section>
 
       <header className="shadow-lg font-[sans-serif] tracking-wide relative z-50">

@@ -143,4 +143,84 @@ module.exports = {
       return res.status(500).json({ error: error.message });
     }
   },
+
+  async getAllCommentsWithReports(req, res) {
+    try {
+      const comments = await Comment.findAll({
+        include: [
+          {
+            model: CommentReport,
+            include: [{ model: User, attributes: ["id", "username", "email"] }],
+            where: {},
+            required: false,
+          },
+          {
+            model: User,
+            attributes: ["id", "username"],
+          },
+        ],
+        order: [
+          ["createdAt", "DESC"],
+          [CommentReport, "createdAt", "DESC"],
+        ],
+      });
+
+      const formattedComments = comments.map((comment) => {
+        const commentJson = comment.toJSON();
+        return {
+          ...commentJson,
+          reportCount: commentJson.CommentReports
+            ? commentJson.CommentReports.length
+            : 0,
+          reports: commentJson.CommentReports || [],
+        };
+      });
+
+      return res.status(200).json(formattedComments);
+    } catch (error) {
+      console.error("Error fetching comments with reports:", error);
+      return res.status(500).json({
+        message: "Failed to fetch comments",
+        error:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
+      });
+    }
+  },
+
+  async deleteComment(req, res) {
+    try {
+      const { id } = req.params;
+
+      const comment = await Comment.findByPk(id);
+      if (!comment) {
+        return res.status(404).json({ message: "Comment not found." });
+      }
+
+      const transaction = await Comment.sequelize.transaction();
+      try {
+        await CommentReport.destroy({
+          where: { commentId: id },
+          transaction,
+        });
+
+        await comment.destroy({ transaction });
+
+        await transaction.commit();
+
+        return res.status(200).json({
+          message: "Comment and all associated reports deleted successfully",
+        });
+      } catch (error) {
+        await transaction.rollback();
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      return res.status(500).json({
+        message: "Failed to delete comment",
+        error:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
+      });
+    }
+  },
 };

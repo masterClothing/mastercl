@@ -13,6 +13,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const commentReportRoutes = require("./routes/commentReportRoutes");
 const contactMessageRoutes = require("./routes/contactMessageRoutes");
+const adsRoutes = require("./routes/adsRoutes");
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api", commentRoutes);
 app.use("/api/comment-reports", commentReportRoutes);
 app.use("/api", contactMessageRoutes);
+app.use("/api/ads", adsRoutes);
 
 app.use("/uploads", express.static("uploads"));
 
