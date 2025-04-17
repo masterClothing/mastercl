@@ -12,6 +12,38 @@ const transporter = nodemailer.createTransport({
 });
 
 const contactMessageController = {
+
+
+
+
+   createMessage: async (req, res) => {
+    try {
+      // Pull the data from the request body
+      const { name, email, phone, subject, message } = req.body;
+
+      // Create a new record in the ContactMessage table
+      const newMessage = await ContactMessage.create({
+        name,
+        email,
+        phoneNumber: phone, // or rename phone to phoneNumber in your front-end
+        subject,
+        message,
+      });
+
+      return res.status(201).json({
+        success: true,
+        message: "Message created successfully",
+        data: newMessage,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to create message",
+        error: error.message,
+      });
+    }
+  },
   // Get all messages
   getAllMessages: async (req, res) => {
     try {
