@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   ShoppingCart,
   Menu,
@@ -19,6 +19,8 @@ const NavBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [ads, setAds] = useState([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
+  const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
+  const searchPopupRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -35,7 +37,25 @@ const NavBar = () => {
     setIsLoggedIn(!!token);
   }, []);
 
+  // Close search popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        searchPopupRef.current &&
+        !searchPopupRef.current.contains(event.target)
+      ) {
+        setIsSearchPopupOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleSearchPopup = () => setIsSearchPopupOpen(!isSearchPopupOpen);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -50,8 +70,9 @@ const NavBar = () => {
   };
 
   const handleSearchSubmit = (e) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
+    if ((e.key === "Enter" || e.type === "click") && searchQuery.trim()) {
       navigate("/search");
+      setIsSearchPopupOpen(false);
       setIsMenuOpen(false);
     }
   };
@@ -104,21 +125,46 @@ const NavBar = () => {
           </Link>
 
           <div className="flex flex-wrap w-full items-center">
-            {/* Updated Search Bar */}
-            <div className="xl:w-80 max-lg:hidden lg:ml-10 max-md:mt-4 relative flex items-center">
-              <input
-                type="text"
-                placeholder="Search for clothes..."
-                className="w-full bg-gray-100 border px-4 pl-10 rounded h-10 outline-none text-sm transition-all"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onKeyDown={handleSearchSubmit}
-              />
-              <Search className="w-5 h-5 absolute left-3 text-gray-500" />
-            </div>
-
             <div className="ml-auto">
               <ul className="flex items-center">
+                {/* Search Icon */}
+                <li className="max-lg:py-2 px-4 cursor-pointer relative">
+                  <button
+                    onClick={toggleSearchPopup}
+                    className="flex items-center justify-center"
+                    aria-label="Search"
+                  >
+                    <Search className="w-6 h-6 text-gray-800" />
+                  </button>
+
+                  {/* Search Popup */}
+                  {isSearchPopupOpen && (
+                    <div
+                      ref={searchPopupRef}
+                      className="absolute right-0 top-full mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50 p-4"
+                    >
+                      <div className="relative flex items-center">
+                        <input
+                          type="text"
+                          placeholder="Search for clothes..."
+                          className="w-full bg-gray-100 border px-4 pl-10 rounded h-10 outline-none text-sm transition-all"
+                          value={searchQuery}
+                          onChange={handleSearchChange}
+                          onKeyDown={handleSearchSubmit}
+                          autoFocus
+                        />
+                        <Search className="w-5 h-5 absolute left-3 text-gray-500" />
+                        <button
+                          className="absolute right-3 bg-[#F0BB78] rounded-full h-6 w-6 flex items-center justify-center hover:bg-[#e0ab68] transition-colors"
+                          onClick={handleSearchSubmit}
+                        >
+                          <Search className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </li>
+
                 <li className="max-lg:py-2 px-4 cursor-pointer">
                   <Link to="/favorite" className="relative flex items-center">
                     <Heart className="w-6 h-6 inline text-[#F0BB78]" />
@@ -201,6 +247,12 @@ const NavBar = () => {
                 onKeyDown={handleSearchSubmit}
               />
               <Search className="w-5 h-5 absolute left-3 text-gray-500" />
+              <button
+                className="absolute right-3 bg-[#F0BB78] rounded-full h-6 w-6 flex items-center justify-center"
+                onClick={handleSearchSubmit}
+              >
+                <Search className="w-4 h-4 text-white" />
+              </button>
             </div>
           </div>
 

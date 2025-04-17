@@ -274,3 +274,47 @@ exports.sendOrderStatusEmail = async (order, previousStatus) => {
     // Email failure shouldn't fail the whole request
   }
 };
+
+
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.userId;
+
+    // Fetch the user along with orders and shipping addresses
+    const user = await User.findOne({
+      where: { id: userId },
+      include: [
+        {
+          model: Order,
+          as: "orders",
+          attributes: [
+            "id",
+            "total",
+            "status",
+            "createdAt",
+            "shippingName",
+            "shippingAddress",
+            "shippingCity",
+            "shippingState",
+            "shippingPostalCode",
+          ],
+          order: [["createdAt", "DESC"]], // Fetch most recent orders first
+        },
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res
+      .status(500)
+      .json({ message: "Error fetching user profile", error: error.message });
+  }
+};

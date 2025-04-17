@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { clearCart } from "../Slices/cartSlice";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const Checkout = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const totalAmount = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const location = useLocation();
+  const { cartItems, total, shippingCost } = location.state || {};
+  const totalAmount = total;
 
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [formData, setFormData] = useState({
@@ -23,9 +18,7 @@ const Checkout = () => {
     shippingPostalCode: "",
   });
   const [loading, setLoading] = useState(false);
-  const [paypalReady, setPaypalReady] = useState(false);
 
-  // PayPal configuration
   const paypalOptions = {
     "client-id":
       "AQO_lrXGFsV-gcb9dl11jWIu-BW84qeQbOxa31FnSsbeJj_fpHAMK3sb-c2aJjJSnjuaN4CDAxvT3tL1",
@@ -33,7 +26,6 @@ const Checkout = () => {
     intent: "capture",
   };
 
-  // Toast notification function
   const showToast = (icon, title, timer = 3000) => {
     const Toast = Swal.mixin({
       toast: true,
@@ -53,7 +45,6 @@ const Checkout = () => {
     });
   };
 
-  // Check if all items have valid size and color
   const validCart = cartItems.every(
     (item) =>
       item.selectedSize &&
@@ -66,7 +57,7 @@ const Checkout = () => {
     if (cartItems.length === 0) {
       navigate("/");
     }
-  }, [cartItems, navigate]);
+  }, [cartItems]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,13 +75,11 @@ const Checkout = () => {
   };
 
   const validateForm = () => {
-    // 1) Check size and color options
     if (!validCart) {
       showToast("warning", "Please select size and color for each item");
       return false;
     }
 
-    // 2) Check all required fields are filled
     const requiredFields = [
       "shippingName",
       "shippingAddress",
@@ -98,6 +87,7 @@ const Checkout = () => {
       "shippingState",
       "shippingPostalCode",
     ];
+
     const isFormValid = requiredFields.every(
       (field) => formData[field].trim() !== ""
     );
@@ -115,17 +105,14 @@ const Checkout = () => {
     showToast("info", "Processing your order...");
 
     try {
-      // Get token from localStorage
       const token = localStorage.getItem("token");
 
-      // Check if token exists and is valid
       if (!token) {
         throw new Error("Authentication token not found. Please log in again.");
       }
 
-      // Prepare payload according to backend requirements
       const payload = {
-        ...formData, // This includes all shipping fields
+        ...formData,
         productIds: cartItems.map((item) => item.id),
         total: totalAmount,
         size: cartItems.map((item) => item.selectedSize),
@@ -148,7 +135,6 @@ const Checkout = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        // Handle specific JWT errors
         if (data.error && data.error.includes("jwt")) {
           throw new Error("Session expired or invalid. Please log in again.");
         }
@@ -166,12 +152,9 @@ const Checkout = () => {
         dispatch(clearCart());
         navigate("/");
       });
-
-      return data.orderId; // Return order ID for PayPal to use
     } catch (error) {
       setLoading(false);
 
-      // Handle JWT specific errors
       if (error.message.includes("jwt") || error.message.includes("token")) {
         showToast("error", "Authentication Error: " + error.message, 5000);
         setTimeout(() => {
@@ -189,29 +172,6 @@ const Checkout = () => {
     if (!validateForm()) return;
     await createOrder();
   };
-
-  // Show toast when form fields are filled correctly
-  useEffect(() => {
-    // Check all fields
-    const allFields = [
-      "shippingName",
-      "shippingAddress",
-      "shippingCity",
-      "shippingState",
-      "shippingPostalCode",
-    ];
-
-    // If all fields have been filled and none were previously filled
-    const allFilled = allFields.every((field) => formData[field].trim() !== "");
-
-    if (allFilled) {
-      const prevFilledCount =
-        Object.values(formData).filter((val) => val.trim() !== "").length - 1;
-      if (prevFilledCount === allFields.length - 1) {
-        showToast("success", "All shipping details completed!");
-      }
-    }
-  }, [formData]);
 
   return (
     <div className="font-sans bg-[#fff] min-h-screen py-8">
@@ -387,7 +347,7 @@ const Checkout = () => {
                         className="ml-3 flex items-center cursor-pointer"
                       >
                         <span className="font-medium text-white">
-                          Credit / Debit Card
+                          Cash
                         </span>
                       </label>
                     </div>
@@ -587,10 +547,7 @@ const Checkout = () => {
                     <p>Subtotal</p>
                     <p>${totalAmount.toFixed(2)}</p>
                   </div>
-                  <div className="flex justify-between text-sm font-medium text-white mb-2">
-                    <p>Shipping</p>
-                    <p className="text-green-600">Free</p>
-                  </div>
+                 
                   <div className="flex justify-between text-base font-bold text-[#F0BB78]">
                     <p>Total</p>
                     <p>${totalAmount.toFixed(2)}</p>

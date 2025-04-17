@@ -13,17 +13,12 @@ const useInView = (options = {}) => {
 
   useEffect(() => {
     if (!ref) return;
-
     const observer = new IntersectionObserver(([entry]) => {
       setIsInView(entry.isIntersecting);
     }, options);
-
     observer.observe(ref);
-
     return () => {
-      if (ref) {
-        observer.unobserve(ref);
-      }
+      if (ref) observer.unobserve(ref);
     };
   }, [ref, options]);
 
@@ -42,7 +37,6 @@ const CategoryCard = ({
   delay = 0,
   isInView = false,
 }) => {
-  // Define different card styles based on type
   const cardStyles = {
     featured: "lg:col-span-2 lg:h-96",
     standard: "h-80",
@@ -55,7 +49,7 @@ const CategoryCard = ({
       bg-[#181818] 
       shadow-[0_10px_30px_rgba(0,0,0,0.3),0_0_0_1px_rgba(240,187,120,0.05)] 
       hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),0_0_0_1px_rgba(240,187,120,0.1)] 
-      ${cardStyles[cardType]}
+      ${cardStyles[cardType]} 
       ${isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
       style={{
         transitionDelay: `${delay}ms`,
@@ -164,7 +158,70 @@ const CategoryCard = ({
 };
 
 const CategorySection = () => {
-  // Define category data with appropriate links
+  // State for storing the customer, category, and product counts from the backend
+  const [happyCustomerCount, setHappyCustomerCount] = useState(null);
+  const [categoryCount, setCategoryCount] = useState(null);
+  const [productCount, setProductCount] = useState(null);
+
+  // Fetch customer count when the component mounts
+  useEffect(() => {
+    const fetchCustomerCount = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/customers/count"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        const data = await response.json();
+        setHappyCustomerCount(data.count);
+      } catch (error) {
+        console.error("Error fetching customer count:", error);
+      }
+    };
+
+    fetchCustomerCount();
+  }, []);
+
+  // Fetch categories list and compute total count
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/categories/get-all-categories"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        const categoriesData = await response.json();
+        setCategoryCount(categoriesData.length);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch all products and compute total count
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        const productsData = await response.json();
+        setProductCount(productsData.length);
+      } catch (error) {
+        console.error("Error fetching product count:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Define category data with appropriate links for Category Cards
   const categories = [
     {
       title: "Women's Collection",
@@ -208,10 +265,68 @@ const CategorySection = () => {
     triggerOnce: true,
   });
 
+  // Define the stats for display.
+  // The stats now use the dynamically fetched values for Categories, Products, and Happy Customers.
+  const stats = [
+    {
+      label: "Categories",
+      value:
+        categoryCount !== null ? categoryCount.toLocaleString() : "Loading...",
+      icon: (
+        <svg
+          className="w-6 h-6 text-[#F0BB78]"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+        </svg>
+      ),
+    },
+    {
+      label: "Products",
+      value:
+        productCount !== null ? productCount.toLocaleString() : "Loading...",
+      icon: (
+        <svg
+          className="w-6 h-6 text-[#F0BB78]"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ),
+    },
+   
+    {
+      label: "Happy Customers",
+      value:
+        happyCustomerCount !== null
+          ? happyCustomerCount.toLocaleString()
+          : "Loading...",
+      icon: (
+        <svg
+          className="w-6 h-6 text-[#F0BB78]"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+            clipRule="evenodd"
+          />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b bg-[#fff] relative overflow-hidden"
+      className="py-24 bg-gradient-to-b bg-[#ffffff] relative overflow-hidden"
     >
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-[#F0BB78]/5 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
@@ -251,19 +366,19 @@ const CategorySection = () => {
 
         {/* Stats section */}
         <div
-          className={`mt-20 bg-[#181818] rounded-2xl p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-sm transform transition-all duration-700 ${
+          className={`mt-20 bg-[#181818]  rounded-2xl p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-sm transform transition-all duration-700 ${
             sectionInView
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
           }`}
           style={{ transitionDelay: "500ms" }}
         >
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/3 mb-8 md:mb-0">
-              <div className="bg-[#252525] p-2 rounded-full inline-block shadow-xl">
-                <div className="bg-[#F0BB78] p-4 rounded-full shadow-inner">
+          <div className="flex flex-col md:flex-row items-center ">
+            <div className="md:w-1/3 mb-8 md:mb-0 ">
+              <div className="bg-[#252525] p-2 rounded-full inline-block shadow-xl ">
+                <div className="bg-[#F0BB78] p-4 rounded-full shadow-inner ">
                   <svg
-                    className="w-12 h-12 text-[#000000]"
+                    className="w-12 h-12 text-[#000000] "
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -275,82 +390,17 @@ const CategorySection = () => {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mt-6 text-white">
-                Category Stats
+              <h3 className="text-2xl font-bold mt-6 text-white ">
+                Elitefit Stats
               </h3>
-              <p className="text-white/70 mt-2">
-                Our extensive catalog is continuously growing to meet your
-                needs.
+              <p className="text-white/70 mt-2 ">
+                We take pride in our commitment to quality and customer
+                satisfaction. Here are some numbers that reflect our dedication
+                to excellence.
               </p>
             </div>
-            <div className="md:w-2/3 md:pl-12 grid grid-cols-2 gap-4 md:grid-cols-4">
-              {[
-                {
-                  label: "Categories",
-                  value: "25+",
-                  icon: (
-                    <svg
-                      className="w-6 h-6 text-[#F0BB78]"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                    </svg>
-                  ),
-                },
-                {
-                  label: "Products",
-                  value: "10,000+",
-                  icon: (
-                    <svg
-                      className="w-6 h-6 text-[#F0BB78]"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ),
-                },
-                {
-                  label: "Brands",
-                  value: "120+",
-                  icon: (
-                    <svg
-                      className="w-6 h-6 text-[#F0BB78]"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-5V9a1 1 0 10-2 0v1H4a2 2 0 110-4h1.17C5.06 5.687 5 5.35 5 5zm4 1V5a1 1 0 10-1 1h1zm3 0a1 1 0 10-1-1v1h1z"
-                        clipRule="evenodd"
-                      />
-                      <path d="M9 11H3v5a2 2 0 002 2h4v-7zm2 7h4a2 2 0 002-2v-5h-6v7z" />
-                    </svg>
-                  ),
-                },
-                {
-                  label: "Happy Customers",
-                  value: "50,000+",
-                  icon: (
-                    <svg
-                      className="w-6 h-6 text-[#F0BB78]"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ),
-                },
-              ].map((stat) => (
+            <div className="md:w-2/3 md:pl-12 grid grid-cols-2 gap-4 md:grid-cols-3 ml-30">
+              {stats.map((stat) => (
                 <div
                   key={stat.label}
                   className="bg-[#252525] p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:bg-[#303030] transform hover:-translate-y-1"
@@ -390,7 +440,10 @@ const CategorySection = () => {
                 Discover premium products that match your unique style.
               </p>
             </div>
-            <button className="bg-[#F0BB78] text-[#000000] font-semibold py-3 px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+            <Link
+              to="/products"
+              className="bg-[#F0BB78] text-[#000000] font-semibold py-3 px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
+            >
               <span>Browse All Categories</span>
               <svg
                 className="w-4 h-4 ml-2"
@@ -405,7 +458,7 @@ const CategorySection = () => {
                   d="M14 5l7 7m0 0l-7 7m7-7H3"
                 />
               </svg>
-            </button>
+            </Link>
           </div>
         </div>
       </div>
