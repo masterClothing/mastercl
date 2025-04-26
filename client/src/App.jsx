@@ -6,7 +6,6 @@
 //   useLocation,
 // } from "react-router-dom";
 
-
 // // Layout
 // import NavBar from "./layout/NavBar";
 // import Footer from "./layout/Footer";
@@ -22,7 +21,6 @@
 // import Contact from "./pages/Contact";
 // import SearchResults from "./pages/SearchResults";
 
-
 // // Theme
 // import { ThemeProvider } from "./components/home/ThemeProvider";
 // import Tech from "./pages/Technology";
@@ -33,14 +31,11 @@
 // import Kids from "./components/catagories/Kids";
 // import Sale from "./components/catagories/Sale";
 // import Profile from "./pages/Profile";
-// import OccasionProducts from "./components/catagories/OccasionProducts";  
+// import OccasionProducts from "./components/catagories/OccasionProducts";
 // import AllProducts from "./components/catagories/AllProducts";
-
-  
 
 // function Layout() {
 //   const location = useLocation();
-
 
 //   // Hide Navbar and Footer on specific pages
 //   const hideNavAndFooter = [
@@ -94,9 +89,6 @@
 // }
 
 // export default App;
-
-
-
 
 // App.js
 import React, { useEffect } from "react";
@@ -158,10 +150,19 @@ function Layout() {
     "/cart",
   ].includes(location.pathname);
 
+  function ScrollToTop() {
+    const { pathname } = useLocation();
+    useEffect(() => {
+      window.scroll({ behavior: "smooth", top: 0 });  
+    }, [pathname]);
+    return null;
+  }
+
   return (
     <>
       {!hideNavAndFooter && <NavBar />}
 
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetails />} />

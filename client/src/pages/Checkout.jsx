@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { clearCart } from "../Slices/cartSlice";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { Toaster, toast } from "react-hot-toast";
 
 const Checkout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { cartItems, total, shippingCost } = location.state || {};
   const totalAmount = total;
 
@@ -26,23 +30,17 @@ const Checkout = () => {
     intent: "capture",
   };
 
-  const showToast = (icon, title, timer = 3000) => {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: timer,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      },
-    });
-
-    Toast.fire({
-      icon: icon,
-      title: title,
-    });
+  // Updated to use react-hot-toast instead of SweetAlert2 for consistent styling
+  const showToast = (type, message) => {
+    if (type === "success") {
+      toast.success(message, { duration: 3000 });
+    } else if (type === "error") {
+      toast.error(message, { duration: 5000 });
+    } else if (type === "warning") {
+      toast(message, { icon: "⚠️", duration: 3000 });
+    } else if (type === "info") {
+      toast(message, { duration: 3000 });
+    }
   };
 
   const validCart = cartItems.every(
@@ -57,7 +55,7 @@ const Checkout = () => {
     if (cartItems.length === 0) {
       navigate("/");
     }
-  }, [cartItems]);
+  }, [cartItems, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -156,13 +154,13 @@ const Checkout = () => {
       setLoading(false);
 
       if (error.message.includes("jwt") || error.message.includes("token")) {
-        showToast("error", "Authentication Error: " + error.message, 5000);
+        showToast("error", "Authentication Error: " + error.message);
         setTimeout(() => {
           localStorage.removeItem("token");
           navigate("/login");
         }, 2000);
       } else {
-        showToast("error", "Error: " + error.message, 5000);
+        showToast("error", "Error: " + error.message);
       }
       throw error;
     }
@@ -175,6 +173,23 @@ const Checkout = () => {
 
   return (
     <div className="font-sans bg-[#fff] min-h-screen py-8">
+      {/* Toast notifications configuration */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#FFFFFF",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            borderLeft: "4px solid #F0BB78",
+          },
+          iconTheme: {
+            primary: "#F0BB78",
+            secondary: "#FFFFFF",
+          },
+        }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-extrabold text-black sm:text-4xl">
@@ -217,7 +232,7 @@ const Checkout = () => {
                             showToast("success", "Name saved!");
                           }
                         }}
-                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border"
+                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border bg-[#252525] text-white placeholder-white/70"
                         placeholder="John Doe"
                         required
                       />
@@ -240,7 +255,7 @@ const Checkout = () => {
                             showToast("success", "Address saved!");
                           }
                         }}
-                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border"
+                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border bg-[#252525] text-white placeholder-white/70"
                         placeholder="123 Main Street"
                         required
                       />
@@ -263,7 +278,7 @@ const Checkout = () => {
                             showToast("success", "City saved!");
                           }
                         }}
-                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border"
+                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border bg-[#252525] text-white placeholder-white/70"
                         placeholder="New York"
                         required
                       />
@@ -286,7 +301,7 @@ const Checkout = () => {
                             showToast("success", "State saved!");
                           }
                         }}
-                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border"
+                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border bg-[#252525] text-white placeholder-white/70"
                         placeholder="NY"
                         required
                       />
@@ -309,7 +324,7 @@ const Checkout = () => {
                             showToast("success", "Postal code saved!");
                           }
                         }}
-                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border"
+                        className="mt-1 block w-full border-[#F0BB78] rounded-md shadow-sm focus:ring-[#F0BB78] focus:border-[#F0BB78] sm:text-sm px-3 py-2 border bg-[#252525] text-white placeholder-white/70"
                         placeholder="10001"
                         required
                       />
@@ -346,9 +361,7 @@ const Checkout = () => {
                         htmlFor="card-payment"
                         className="ml-3 flex items-center cursor-pointer"
                       >
-                        <span className="font-medium text-white">
-                          Cash
-                        </span>
+                        <span className="font-medium text-white">Cash</span>
                       </label>
                     </div>
 
@@ -417,7 +430,7 @@ const Checkout = () => {
                           Processing...
                         </>
                       ) : (
-                        <>Pay with Card - ${totalAmount.toFixed(2)}</>
+                        <>Pay with Card - {totalAmount.toFixed(2)} JD</>
                       )}
                     </button>
                     <p className="mt-3 text-xs text-center text-white">
@@ -473,17 +486,12 @@ const Checkout = () => {
                             } catch (error) {
                               showToast(
                                 "error",
-                                "Payment failed: " + error.message,
-                                5000
+                                "Payment failed: " + error.message
                               );
                             }
                           }}
                           onError={(err) => {
-                            showToast(
-                              "error",
-                              "PayPal error: " + err.message,
-                              5000
-                            );
+                            showToast("error", "PayPal error: " + err.message);
                           }}
                         />
                       </div>
@@ -535,7 +543,7 @@ const Checkout = () => {
                             </p>
                           </div>
                           <p className="text-sm font-medium text-white">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {(item.price * item.quantity).toFixed(2)} JD
                           </p>
                         </li>
                       ))}
@@ -545,12 +553,12 @@ const Checkout = () => {
                 <div className="mt-4 pt-4 border-t border-[#F0BB78]">
                   <div className="flex justify-between text-sm font-medium text-white mb-2">
                     <p>Subtotal</p>
-                    <p>${totalAmount.toFixed(2)}</p>
+                    <p>{totalAmount.toFixed(2)} JD</p>
                   </div>
-                 
+
                   <div className="flex justify-between text-base font-bold text-[#F0BB78]">
                     <p>Total</p>
-                    <p>${totalAmount.toFixed(2)}</p>
+                    <p>{totalAmount.toFixed(2)} JD</p>
                   </div>
                 </div>
               </div>

@@ -25,6 +25,7 @@ const ProductDetails = () => {
   const [reviewImage, setReviewImage] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loadingReviews, setLoadingReviews] = useState(true);
+  const [expandedDescription, setExpandedDescription] = useState(false);
 
   // State for report modal
   const [showReportModal, setShowReportModal] = useState(false);
@@ -42,6 +43,27 @@ const ProductDetails = () => {
     // "/api/placeholder/100/100",
     // "/api/placeholder/100/100",
   ];
+
+  // ضع هذا مع بقية الـ state
+  // const [alsoBought, setAlsoBought] = useState([]);
+
+  // // ▼ جلب التوصيات من الباك‑إند
+  // useEffect(() => {
+  //   if (!item) return; // انتظر حتى تصل بيانات المنتج
+  //   (async () => {
+  //     try {
+  //       const res = await fetch(
+  //         `http://localhost:5000/api/products/${item.id}/also-bought`
+  //       );
+  //       if (!res.ok) throw new Error("No suggestions");
+  //       const { data } = await res.json(); // المسار يعيد { success, data }
+  //       setAlsoBought(data); // خزّن النتيجة
+  //     } catch (err) {
+  //       console.error("also‑bought:", err.message);
+  //       setAlsoBought([]); // افرِغها لو فشل الطلب
+  //     }
+  //   })();
+  // }, [item]);
 
   useEffect(() => {
     if (item) {
@@ -433,22 +455,22 @@ const ProductDetails = () => {
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "JOD",
       minimumFractionDigits: 2,
     }).format(price);
   };
 
   return (
-    <div className="font-sans bg-gray-50">
+    <div className="font-sans bg-gray-50 min-h-screen w-full">
       <Toaster />
 
       {/* Main Product Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         <div className="bg-white shadow-lg rounded-2xl overflow-hidden">
-          <div className="grid lg:grid-cols-2 gap-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-0">
             {/* Product Image Gallery */}
-            <div className="p-6 lg:p-8 bg-gray-50">
-              <div className="aspect-square bg-white rounded-xl border border-gray-100 overflow-hidden shadow-md mb-6">
+            <div className=" bg-gray-50">
+              <div className="aspect-square bg-white rounded-xl border border-gray-100 overflow-hidden shadow-md mb-4 sm:mb-6">
                 <img
                   src={mainImage}
                   className="w-full h-full object-contain p-4"
@@ -456,10 +478,10 @@ const ProductDetails = () => {
                 />
               </div>
 
-              <div className="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
+              <div className="flex space-x-3 sm:space-x-4 overflow-x-auto pb-2 scrollbar-hide">
                 <button
                   onClick={() => changeMainImage(mainImage)}
-                  className="w-20 h-20 rounded-lg border-2 border-black overflow-hidden flex-shrink-0 transition-all duration-300 transform hover:scale-105"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 border-black overflow-hidden flex-shrink-0 transition-all duration-300 transform hover:scale-105"
                 >
                   <img
                     src={mainImage}
@@ -471,7 +493,7 @@ const ProductDetails = () => {
                   <button
                     key={index}
                     onClick={() => changeMainImage(img)}
-                    className="w-20 h-20 rounded-lg border hover:border-black overflow-hidden flex-shrink-0 transition-all duration-300 transform hover:scale-105"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border hover:border-black overflow-hidden flex-shrink-0 transition-all duration-300 transform hover:scale-105"
                   >
                     <img
                       src={img}
@@ -484,8 +506,8 @@ const ProductDetails = () => {
             </div>
 
             {/* Product Details */}
-            <div className="p-6 lg:p-10">
-              <div className="flex items-center space-x-2 mb-4">
+            <div className="p-4 sm:p-6 lg:p-10  ">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {item.oldPrice && (
                   <div className="px-3 py-1 bg-black text-white text-xs font-medium rounded-full">
                     {Math.round(
@@ -499,7 +521,7 @@ const ProductDetails = () => {
                 </div>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-bold text-black mb-2">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-2">
                 {item.firstName || item.name}
               </h1>
 
@@ -528,27 +550,28 @@ const ProductDetails = () => {
                 </span>
               </div>
 
-              <div className="flex items-baseline mb-6">
-                <span className="text-3xl font-bold text-black">
+              <div className="flex flex-wrap items-baseline gap-3 mb-6">
+                <span className="text-2xl sm:text-3xl font-bold text-black">
                   {formatPrice(item.price)}
                 </span>
                 {item.oldPrice && (
-                  <span className="text-xl text-gray-500 line-through ml-3">
+                  <span className="text-lg sm:text-xl text-gray-500 line-through">
                     {formatPrice(item.oldPrice)}
                   </span>
                 )}
               </div>
 
               <div className="border-t border-b border-gray-200 py-6 space-y-6 mb-6">
+                {/* Size Section */}
                 <div>
                   <h3 className="text-sm font-medium text-black uppercase mb-3">
                     Size
                   </h3>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
                     {sizes.map((size) => (
                       <button
                         key={size}
-                        className={`h-10 min-w-10 px-3 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                        className={`h-10 min-w-[2.5rem] px-3 rounded-lg flex items-center justify-center transition-all duration-300 ${
                           selectedSize === size
                             ? "bg-black text-white shadow-md"
                             : "border border-gray-300 hover:border-black text-black hover:bg-gray-50"
@@ -658,9 +681,10 @@ const ProductDetails = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
                 <button
-                  className="flex-1 bg-black hover:bg-gray-900 text-white px-6 py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                  className="w-full sm:flex-1 bg-black hover:bg-gray-900 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
                   onClick={handleAddToCart}
                 >
                   <svg
@@ -680,7 +704,7 @@ const ProductDetails = () => {
                   Add to Cart
                 </button>
                 <button
-                  className="flex-1 bg-white border-2 border-black hover:border-gray-800 text-black px-6 py-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center"
+                  className="w-full sm:flex-1 bg-white border-2 border-black hover:border-gray-800 text-black px-4 sm:px-6 py-3 sm:py-4 rounded-lg font-medium transition-all duration-300 flex items-center justify-center"
                   onClick={handleAddToFavorite}
                 >
                   <svg
@@ -713,7 +737,7 @@ const ProductDetails = () => {
                   >
                     Description
                     {activeTab === "description" && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-F0BB78"></span>
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500"></span>
                     )}
                   </button>
                   <button
@@ -726,7 +750,7 @@ const ProductDetails = () => {
                   >
                     Details
                     {activeTab === "details" && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-F0BB78"></span>
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500"></span>
                     )}
                   </button>
                   <button
@@ -739,14 +763,76 @@ const ProductDetails = () => {
                   >
                     Shipping
                     {activeTab === "shipping" && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-F0BB78"></span>
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-amber-500"></span>
                     )}
                   </button>
                 </div>
                 <div className="py-4">
                   {activeTab === "description" && (
                     <div className="text-gray-700 space-y-3">
-                      <p>{item.description || "No description available."}</p>
+                      {item.description ? (
+                        <>
+                          <div className="prose max-w-none">
+                            {expandedDescription ? (
+                              <p>{item.description}</p>
+                            ) : (
+                              <p>
+                                {item.description.length > 200
+                                  ? `${item.description.slice(0, 200)}...`
+                                  : item.description}
+                              </p>
+                            )}
+                          </div>
+                          {item.description.length > 200 && (
+                            <button
+                              className="text-amber-500 font-medium hover:underline flex items-center"
+                              onClick={() =>
+                                setExpandedDescription(!expandedDescription)
+                              }
+                            >
+                              {expandedDescription ? (
+                                <>
+                                  Read Less
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 ml-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 15l7-7 7 7"
+                                    />
+                                  </svg>
+                                </>
+                              ) : (
+                                <>
+                                  Read More
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 ml-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M19 9l-7 7-7-7"
+                                    />
+                                  </svg>
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <p>No description available.</p>
+                      )}
                       <ul className="list-disc pl-5 space-y-1 mt-4">
                         <li>Premium quality materials</li>
                         <li>Designed for comfort and style</li>
@@ -780,14 +866,14 @@ const ProductDetails = () => {
                   {activeTab === "shipping" && (
                     <div className="space-y-3">
                       <p className="text-gray-700">
-                        Free standard shipping on all orders over $100.
+                        Free standard shipping on all orders over 100 JD.
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <div className="p-4 border border-gray-200 rounded-lg">
                           <h4 className="font-medium flex items-center">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 mr-2 text-F0BB78"
+                              className="h-5 w-5 mr-2 text-amber-500"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -805,14 +891,14 @@ const ProductDetails = () => {
                             3-5 business days
                           </p>
                           <p className="text-sm text-gray-600 mt-1">
-                            $4.99 (Free over $100)
+                            4.99 JD (Free over 100 JD)
                           </p>
                         </div>
                         <div className="p-4 border border-gray-200 rounded-lg">
                           <h4 className="font-medium flex items-center">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 mr-2 text-F0BB78"
+                              className="h-5 w-5 mr-2 text-amber-500"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -829,7 +915,7 @@ const ProductDetails = () => {
                           <p className="text-sm text-gray-600 mt-1">
                             1-2 business days
                           </p>
-                          <p className="text-sm text-gray-600 mt-1">$9.99</p>
+                          <p className="text-sm text-gray-600 mt-1">9.99 JD</p>
                         </div>
                       </div>
                     </div>
@@ -841,11 +927,11 @@ const ProductDetails = () => {
         </div>
 
         {/* Customer Reviews Section */}
-        <div className="mt-12 bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold mb-8 text-black flex items-center">
+        <div className="mt-8 md:mt-12 bg-white rounded-lg md:rounded-2xl shadow-lg p-4 md:p-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-black flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 mr-2 text-F0BB78"
+              className="h-5 w-5 md:h-6 md:w-6 mr-2 text-F0BB78"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -860,12 +946,12 @@ const ProductDetails = () => {
             Customer Reviews
           </h2>
 
-          <div className="grid lg:grid-cols-12 gap-8 mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8 mb-6 md:mb-10">
             {/* Review Summary */}
             <div className="lg:col-span-4">
-              <div className="bg-gray-50 p-6 rounded-xl">
-                <div className="flex items-center mb-6">
-                  <div className="text-5xl font-bold mr-4 text-black">
+              <div className="bg-gray-50 p-4 md:p-6 rounded-lg md:rounded-xl">
+                <div className="flex items-center mb-4 md:mb-6">
+                  <div className="text-4xl md:text-5xl font-bold mr-3 md:mr-4 text-black">
                     {calculateAverageRating()}
                   </div>
                   <div>
@@ -876,7 +962,7 @@ const ProductDetails = () => {
                           <svg
                             key={i}
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`h-5 w-5 ${
+                            className={`h-4 w-4 md:h-5 md:w-5 ${
                               i < Math.round(calculateAverageRating())
                                 ? "text-F0BB78"
                                 : "text-gray-300"
@@ -888,25 +974,25 @@ const ProductDetails = () => {
                           </svg>
                         ))}
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-xs md:text-sm text-gray-500 mt-1">
                       Based on {reviews.length} reviews
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {[5, 4, 3, 2, 1].map((star) => (
                     <div key={star} className="flex items-center">
-                      <div className="w-10 text-sm text-gray-700 font-medium">
+                      <div className="w-8 md:w-10 text-xs md:text-sm text-gray-700 font-medium">
                         {star} ★
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 mx-2 overflow-hidden">
+                      <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2 mx-1 md:mx-2 overflow-hidden">
                         <div
-                          className="bg-F0BB78 h-2 rounded-full"
+                          className="bg-F0BB78 h-1.5 md:h-2 rounded-full"
                           style={{ width: `${getRatingPercentage(star)}%` }}
                         ></div>
                       </div>
-                      <div className="w-10 text-sm text-gray-600 text-right">
+                      <div className="w-8 md:w-10 text-xs md:text-sm text-gray-600 text-right">
                         {getRatingCount(star)}
                       </div>
                     </div>
@@ -916,14 +1002,17 @@ const ProductDetails = () => {
             </div>
 
             {/* Review Form */}
-            <div className="lg:col-span-8">
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="text-xl font-semibold mb-6 text-black">
+            <div className="lg:col-span-8 mt-4 lg:mt-0">
+              <div className="bg-white p-4 md:p-6 rounded-lg md:rounded-xl border border-gray-200 shadow-sm">
+                <h3 className="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-black">
                   Write a Review
                 </h3>
-                <form onSubmit={handleReviewSubmit} className="space-y-6">
+                <form
+                  onSubmit={handleReviewSubmit}
+                  className="space-y-4 md:space-y-6"
+                >
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-1 md:mb-2 text-gray-700">
                       Rating
                     </label>
                     <div className="flex items-center">
@@ -932,26 +1021,32 @@ const ProductDetails = () => {
                           type="button"
                           key={star}
                           onClick={() => setRating(star)}
-                          className="text-3xl text-gray-300 focus:outline-none hover:text-F0BB78 transition-colors"
+                          className="text-2xl md:text-3xl text-gray-300 focus:outline-none hover:text-F0BB78 transition-colors"
                         >
-                          <span className={star <= rating ? "text-F0BB78" : ""}>
+                          <span
+                            className={
+                              star <= rating
+                                ? "text-yellow-400"
+                                : "text-gray-300"
+                            }
+                          >
                             ★
                           </span>
                         </button>
                       ))}
-                      <span className="ml-3 text-gray-600 text-sm">
+                      <span className="ml-2 md:ml-3 text-gray-600 text-xs md:text-sm">
                         {rating} out of 5
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-1 md:mb-2 text-gray-700">
                       Your Review
                     </label>
                     <textarea
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                      rows="4"
+                      className="w-full p-2 md:p-3 border border-gray-300 rounded-md md:rounded-lg focus:ring-2 focus:ring-black focus:border-transparent transition-all text-sm md:text-base"
+                      rows="3"
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                       placeholder="Share your detailed experience with this product..."
@@ -960,7 +1055,7 @@ const ProductDetails = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-gray-700">
+                    <label className="block text-sm font-medium mb-1 md:mb-2 text-gray-700">
                       Add Photo (Optional, Max 5MB)
                     </label>
                     <div className="relative">
@@ -968,11 +1063,11 @@ const ProductDetails = () => {
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        className="w-full p-2 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:bg-black file:text-white hover:file:bg-gray-800 transition-colors"
+                        className="w-full p-1.5 md:p-2 border border-gray-300 rounded-md md:rounded-lg text-xs md:text-sm file:mr-2 md:file:mr-4 file:py-1 md:file:py-2 file:px-2 md:file:px-4 file:rounded-full file:border-0 file:text-xs md:file:text-sm file:bg-black file:text-white hover:file:bg-gray-800 transition-colors"
                       />
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2"
+                        className="h-4 w-4 md:h-5 md:w-5 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -986,20 +1081,20 @@ const ProductDetails = () => {
                       </svg>
                     </div>
                     {reviewImage && (
-                      <div className="mt-3 flex items-center">
+                      <div className="mt-2 md:mt-3 flex items-center">
                         <img
                           src={URL.createObjectURL(reviewImage)}
                           alt="Preview"
-                          className="h-24 w-24 object-cover rounded-lg mr-4 border border-gray-200"
+                          className="h-16 w-16 md:h-24 md:w-24 object-cover rounded-md md:rounded-lg mr-3 md:mr-4 border border-gray-200"
                         />
                         <button
                           type="button"
                           onClick={() => setReviewImage(null)}
-                          className="text-red-500 hover:text-red-700 flex items-center text-sm font-medium"
+                          className="text-red-500 hover:text-red-700 flex items-center text-xs md:text-sm font-medium"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 mr-1"
+                            className="h-3 w-3 md:h-4 md:w-4 mr-1"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -1019,11 +1114,11 @@ const ProductDetails = () => {
 
                   <button
                     type="submit"
-                    className="bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg transition-all duration-300 font-medium shadow-md hover:shadow-lg flex items-center"
+                    className="bg-black hover:bg-gray-900 text-white px-4 md:px-6 py-2 md:py-3 text-sm md:text-base rounded-md md:rounded-lg transition-all duration-300 font-medium shadow-md hover:shadow-lg flex items-center w-full sm:w-auto"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
+                      className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -1044,18 +1139,18 @@ const ProductDetails = () => {
 
           {/* Reviews List */}
           {loadingReviews ? (
-            <div className="text-center py-12 bg-gray-50 rounded-xl">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
-              <p className="mt-4 text-gray-600 font-medium">
+            <div className="text-center py-8 md:py-12 bg-gray-50 rounded-lg md:rounded-xl">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-black"></div>
+              <p className="mt-3 md:mt-4 text-gray-600 font-medium text-sm md:text-base">
                 Loading reviews...
               </p>
             </div>
           ) : reviews.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-xl">
-              <div className="w-16 h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-4">
+            <div className="text-center py-8 md:py-12 bg-gray-50 rounded-lg md:rounded-xl">
+              <div className="w-12 h-12 md:w-16 md:h-16 mx-auto bg-gray-200 rounded-full flex items-center justify-center mb-3 md:mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-gray-400"
+                  className="h-6 w-6 md:h-8 md:w-8 text-gray-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -1068,30 +1163,30 @@ const ProductDetails = () => {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-medium">No reviews yet</h3>
-              <p className="text-gray-500 mt-2">
+              <h3 className="text-lg md:text-xl font-medium">No reviews yet</h3>
+              <p className="text-gray-500 mt-1 md:mt-2 text-sm md:text-base">
                 Be the first to review this product
               </p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
+                  className="bg-white p-4 md:p-6 rounded-lg md:rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-start">
-                      <div className="w-10 h-10 rounded-full bg-F0BB78 flex items-center justify-center text-white font-bold mr-3">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 md:mb-4">
+                    <div className="flex items-start mb-2 sm:mb-0">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-F0BB78 flex items-center justify-center text-white font-bold mr-2 md:mr-3 text-sm md:text-base">
                         {review.name
                           ? review.name.charAt(0).toUpperCase()
                           : "U"}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-black">
+                        <h4 className="font-semibold text-black text-sm md:text-base">
                           {review.name || "Anonymous User"}
                         </h4>
-                        <div className="flex items-center mt-1">
+                        <div className="flex items-center mt-0.5 md:mt-1">
                           <div className="flex text-F0BB78">
                             {Array(5)
                               .fill()
@@ -1099,7 +1194,7 @@ const ProductDetails = () => {
                                 <svg
                                   key={i}
                                   xmlns="http://www.w3.org/2000/svg"
-                                  className={`h-4 w-4 ${
+                                  className={`h-3 w-3 md:h-4 md:w-4 ${
                                     i < review.rating
                                       ? "text-F0BB78"
                                       : "text-gray-300"
@@ -1111,13 +1206,13 @@ const ProductDetails = () => {
                                 </svg>
                               ))}
                           </div>
-                          <span className="text-sm text-gray-600 ml-2">
+                          <span className="text-xs md:text-sm text-gray-600 ml-1 md:ml-2">
                             {review.rating}/5
                           </span>
                         </div>
                       </div>
                     </div>
-                    <span className="text-sm text-gray-500 font-medium">
+                    <span className="text-xs md:text-sm text-gray-500 font-medium">
                       {new Date(review.date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -1126,12 +1221,12 @@ const ProductDetails = () => {
                     </span>
                   </div>
 
-                  <p className="text-gray-700 leading-relaxed my-4">
+                  <p className="text-gray-700 text-sm md:text-base leading-relaxed my-3 md:my-4">
                     {review.comment}
                   </p>
 
                   {review.reviewImage && (
-                    <div className="mt-4 mb-6">
+                    <div className="mt-3 md:mt-4 mb-4 md:mb-6">
                       <img
                         src={
                           review.reviewImage.startsWith("http")
@@ -1139,55 +1234,20 @@ const ProductDetails = () => {
                             : `http://localhost:5000${review.reviewImage}`
                         }
                         alt="Review"
-                        className="h-auto max-w-xs object-cover rounded-lg shadow-sm"
+                        className="h-auto max-w-full sm:max-w-xs object-cover rounded-md md:rounded-lg shadow-sm"
                       />
                     </div>
                   )}
 
-                  <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
-                    <div className="flex items-center space-x-4">
-                      <button className="text-sm text-gray-500 hover:text-black flex items-center transition-colors">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
-                          />
-                        </svg>
-                        Helpful
-                      </button>
-                      <button className="text-sm text-gray-500 hover:text-black flex items-center transition-colors">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2"
-                          />
-                        </svg>
-                        Not Helpful
-                      </button>
-                    </div>
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 md:mt-6 pt-3 md:pt-4 border-t border-gray-100">
+                    <div className="flex items-center space-x-3 md:space-x-4 mb-2 sm:mb-0"></div>
                     <button
-                      className="text-sm text-gray-500 hover:text-red-600 flex items-center transition-colors"
+                      className="text-xs md:text-sm text-gray-500 hover:text-red-600 flex items-center transition-colors"
                       onClick={() => openReportModal(review.id)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-1"
+                        className="h-4 w-4 md:h-5 md:w-5 mr-1"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -1206,8 +1266,8 @@ const ProductDetails = () => {
               ))}
 
               {reviews.length > 5 && (
-                <div className="flex justify-center mt-8">
-                  <button className="px-8 py-3 border border-gray-300 rounded-lg text-black hover:bg-gray-50 font-medium transition-all hover:shadow-md">
+                <div className="flex justify-center mt-6 md:mt-8">
+                  <button className="px-6 md:px-8 py-2 md:py-3 border border-gray-300 rounded-md md:rounded-lg text-sm md:text-base text-black hover:bg-gray-50 font-medium transition-all hover:shadow-md">
                     Load More Reviews
                   </button>
                 </div>
@@ -1276,13 +1336,14 @@ const ProductDetails = () => {
                     Luxury Collection
                   </p>
                   <div className="mt-1 font-medium text-black">
-                    ${(99.99 - index * 10).toFixed(2)}
+                    {(99.99 - index * 10).toFixed(2)} JD
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+        {/* ───── also‑bought dynamic grid ───── */}
       </div>
 
       {/* Report Modal */}

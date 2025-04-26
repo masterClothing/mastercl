@@ -128,18 +128,32 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#181818] to-[#252525] flex items-center justify-center">
-      <div className="max-w-6xl mx-auto bg-[#181818] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4 overflow-y-auto py-8">
+      <div className="w-full max-w-6xl mx-auto bg-[#181818] rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
         {/* Left Section - Visuals */}
-        <div className="w-full md:w-1/2 bg-gradient-to-r from-[#252525] to-[#181818] p-10 text-white flex flex-col justify-center relative overflow-hidden">
+        <div className="w-full md:w-1/2 bg-gradient-to-r from-[#252525] to-[#181818] p-6 sm:p-8 md:p-10 text-white flex flex-col justify-center relative overflow-hidden">
           {/* Background decorative elements */}
           <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-[#F0BB78]/5 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#F0BB78]/5 blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
-          {/* Replace text with logo */}
-          <div className="flex mb-4 items-center justify-center flex-col ">
-            <h1 className="text-4xl font-bold mb-2 mt-10">Welcome to </h1>
-            <img src={Logo} alt="EliteFit logo" className="w-[240px] mt-1" />
+          {/* Logo and heading - responsive adjustments */}
+          <div className="flex mb-4 items-center justify-center flex-col">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 mt-6 md:mt-10 text-center">
+              Welcome to{" "}
+            </h1>
+            <img
+              src={Logo}
+              alt="EliteFit logo"
+              className="w-[160px] sm:w-[200px] md:w-[240px] mt-1"
+            />
+          </div>
+
+          {/* Only show this on small screens, hidden on md and above */}
+          <div className="md:hidden flex flex-col items-center justify-center mt-4">
+            <p className="text-center text-sm sm:text-base opacity-80 mb-6">
+              Access your personalized fitness experience and start your journey
+              to elite fitness.
+            </p>
           </div>
 
           {/* Glowing element for extra visual appeal */}
@@ -147,14 +161,18 @@ const Login = () => {
         </div>
 
         {/* Right Section - Login Form */}
-        <div className="w-full md:w-1/2 p-10 bg-[#181818] text-white">
-          <h2 className="text-3xl font-bold text-white mb-6 ml-18">Sign In</h2>
-          <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-sm font-semibold tracking-wide shadow-sm mb-6 ml-10">
-            Access Your Account
-          </span>
+        <div className="w-full md:w-1/2 p-6 sm:p-8 md:p-10 bg-[#181818] text-white">
+          <div className="flex flex-col items-center md:items-start">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 md:mb-6 text-center md:text-left">
+              Sign In
+            </h2>
+            <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-sm mb-6">
+              Access Your Account
+            </span>
+          </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4 sm:space-y-6">
               <div>
                 <input
                   type="email"
@@ -188,12 +206,12 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="mt-6 w-full bg-[#F0BB78] text-[#000000] py-3 px-6 rounded-lg font-semibold hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center"
+              className="mt-4 sm:mt-6 w-full bg-[#F0BB78] text-[#000000] py-2 sm:py-3 px-6 rounded-lg font-semibold hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center"
             >
               {isLoading ? (
                 <>
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-[#000000]"
+                    className="animate-spin -ml-1 mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5 text-[#000000]"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -218,7 +236,7 @@ const Login = () => {
                 <>
                   Sign In
                   <svg
-                    className="w-4 h-4 ml-2"
+                    className="w-3 h-3 sm:w-4 sm:h-4 ml-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -236,11 +254,11 @@ const Login = () => {
           </form>
 
           {/* Google Sign-In Button Container */}
-          <div className="flex items-center justify-center mt-6">
+          <div className="flex items-center justify-center mt-4 sm:mt-6">
             <div id="google-signin-btn"></div>
           </div>
 
-          <p className="mt-6 text-center text-white/70">
+          <p className="mt-4 sm:mt-6 text-center text-white/70 text-sm sm:text-base">
             Don't have an account?{" "}
             <Link
               to="/signup"

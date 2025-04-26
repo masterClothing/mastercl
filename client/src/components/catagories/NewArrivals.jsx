@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../Slices/cartSlice";
 import { addToFavorite, removeFromFavorite } from "../../Slices/favoriteSlice";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster, toast } from "react-hot-toast";
 
 const NewArrivals = () => {
   const [products, setProducts] = useState([]);
@@ -23,7 +22,6 @@ const NewArrivals = () => {
     axios
       .get("http://localhost:5000/api/arrivals-products")
       .then((response) => {
-        console.log("✅ API Response:", response.data);
         setProducts(response.data);
         setLoading(false);
       })
@@ -55,17 +53,17 @@ const NewArrivals = () => {
   // Add to cart with toast notification
   const handleAddToCart = (item) => {
     dispatch(addToCart(item));
-    toast.success("Product added to cart");
+    toast.success("Product added to cart", { duration: 3000 });
   };
 
   // Toggle favorite with toast notification
   const handleFavoriteToggle = (item, isFavorite) => {
     if (isFavorite) {
       dispatch(removeFromFavorite(item.id));
-      toast.info("Product delete from favorites");
+      toast("Removed from favorites", { icon: "🗑️" });
     } else {
       dispatch(addToFavorite(item));
-      toast.success("Product added to favorites");
+      toast.success("Added to favorites", { duration: 3000 });
     }
   };
 
@@ -76,9 +74,23 @@ const NewArrivals = () => {
       <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#F0BB78]/5 blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
       {/* Toast Container */}
-      <ToastContainer position="top-right" autoClose={3000} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#FFFFFF",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            borderLeft: "4px solid #F0BB78",
+          },
+          iconTheme: {
+            primary: "#F0BB78",
+            secondary: "#FFFFFF",
+          },
+        }}
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative">
+      <div className="container mx-auto px-3  sm:px-6 w-full relative">
         {/* Header Section */}
         <div className="text-center mb-16">
           <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-sm font-semibold tracking-wide uppercase shadow-sm">
@@ -109,7 +121,7 @@ const NewArrivals = () => {
 
         {/* Products Grid */}
         {!loading && !error && currentProducts.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
             {currentProducts.map((product) => {
               const isFavorite = favoriteItems.some(
                 (fav) => fav.id === product.id
@@ -154,7 +166,7 @@ const NewArrivals = () => {
                     )}
 
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
                       <button
                         className="bg-[#181818] text-white p-3 rounded-full shadow-lg mx-2 hover:bg-[#F0BB78]/20 transition transform hover:scale-105 duration-300"
                         title="Quick view"
@@ -199,11 +211,11 @@ const NewArrivals = () => {
                     </p>
                     <div className="flex items-center mt-3">
                       <h6 className="text-base sm:text-lg font-bold text-[#F0BB78]">
-                        ${product.price}
+                        {product.price} JD
                       </h6>
                       {hasDiscount && (
                         <h6 className="ml-2 text-sm text-gray-400 line-through">
-                          ${product.oldPrice}
+                          {product.oldPrice} JD
                         </h6>
                       )}
                     </div>

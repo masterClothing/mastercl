@@ -6,4 +6,6 @@ router.get("/", adsController.getAllAds);
 
 router.put("/:id", adsController.updateAd);
 
+router.put("/status/:id", adsController.updateStatus);
+
 module.exports = router;

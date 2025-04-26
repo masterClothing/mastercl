@@ -22,7 +22,7 @@ const Profile = () => {
     firstName: "",
     lastName: "",
     email: "",
-    address: "",
+    
   });
   const [shippingAddresses, setShippingAddresses] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -183,11 +183,11 @@ const Profile = () => {
     );
 
   return (
-    <div className="min-h-screen bg-[#181818] text-white">
+    <div className="min-h-screen bg-[#ffffff] text-white">
       <ToastContainer />
       {/* Hero Banner */}
       <div className="h-64 bg-gradient-to-b from-[#F0BB78]/30 to-[#181818] relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#181818] opacity-30"></div>
+        <div className="absolute inset-0 bg-[#181818] "></div>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold tracking-wider">
@@ -344,7 +344,6 @@ const Profile = () => {
                           disabled
                         />
                       </div>
-                
                     </div>
                   ) : (
                     <div className="bg-[#181818] rounded-xl p-6">
@@ -443,7 +442,7 @@ const Profile = () => {
                               </td>
                               <td className="py-3 px-4">{order.status}</td>
                               <td className="py-3 px-4 text-right">
-                                ${order.total}
+                                {order.total} JD
                               </td>
                             </tr>
                           ))}

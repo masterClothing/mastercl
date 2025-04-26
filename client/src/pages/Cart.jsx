@@ -7,8 +7,7 @@ import {
   clearCart,
 } from "../Slices/cartSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster, toast } from "react-hot-toast"; // Changed from react-toastify to react-hot-toast
 import { addToFavorite, removeFromFavorite } from "../Slices/favoriteSlice";
 
 const Cart = () => {
@@ -56,8 +55,7 @@ const Cart = () => {
       });
     } else {
       toast.error("Please select size and color for all items", {
-        position: "top-right",
-        autoClose: 3000,
+        duration: 3000,
       });
     }
   };
@@ -66,8 +64,7 @@ const Cart = () => {
   const handleRemoveFromCart = (id, name) => {
     dispatch(removeFromCart(id));
     toast.success(`${name} removed from cart`, {
-      position: "top-right",
-      autoClose: 3000,
+      duration: 3000,
     });
   };
 
@@ -76,16 +73,15 @@ const Cart = () => {
     if (isFavorite) {
       // If already a favorite, remove from favorites
       dispatch(removeFromFavorite(item.id));
-      toast.info("Product removed from favorites", {
-        position: "top-right",
-        autoClose: 2000,
+      toast("Product removed from favorites", {
+        icon: "🗑️",
+        duration: 2000,
       });
     } else {
       // If not a favorite, add to favorites
       dispatch(addToFavorite(item));
       toast.success("Product added to favorites", {
-        position: "top-right",
-        autoClose: 2000,
+        duration: 2000,
       });
     }
   };
@@ -98,8 +94,7 @@ const Cart = () => {
         increment ? "increased" : "decreased"
       } to ${quantity}`,
       {
-        position: "top-right",
-        autoClose: 2000,
+        duration: 2000,
       }
     );
   };
@@ -108,8 +103,7 @@ const Cart = () => {
   const handleUpdateOptions = (id, selectedSize, selectedColor) => {
     dispatch(updateOptions({ id, selectedSize, selectedColor }));
     toast.info("Product options updated", {
-      position: "top-right",
-      autoClose: 2000,
+      duration: 2000,
     });
   };
 
@@ -118,15 +112,30 @@ const Cart = () => {
     if (cartItems.length > 0) {
       dispatch(clearCart());
       toast.info("Cart has been cleared", {
-        position: "top-right",
-        autoClose: 3000,
+        duration: 3000,
       });
     }
   };
 
   return (
     <div className="font-sans bg-[#fff] text-black min-h-screen py-12">
-      <ToastContainer />
+      {/* Toast configuration to match Trending component */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#FFFFFF",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            borderLeft: "4px solid #F0BB78",
+          },
+          iconTheme: {
+            primary: "#F0BB78",
+            secondary: "#FFFFFF",
+          },
+        }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-bold text-black mb-8">Shopping Cart</h1>
 
@@ -292,7 +301,8 @@ const Cart = () => {
 
                         <div className="ml-auto text-right pt-2 sm:pt-0">
                           <h4 className="text-lg font-bold text-white mb-3">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {/* Changed $ to JD */}
+                            {(item.price * item.quantity).toFixed(2)} JD
                           </h4>
 
                           <div className="inline-flex items-center border border-[#F0BB78]/20 rounded-lg overflow-hidden">
@@ -406,7 +416,8 @@ const Cart = () => {
                   Subtotal (
                   {cartItems.reduce((sum, item) => sum + item.quantity, 0)}{" "}
                   items)
-                  <span className="font-semibold">${total.toFixed(2)}</span>
+                  {/* Changed $ to JD */}
+                  <span className="font-semibold">{total.toFixed(2)} JD</span>
                 </li>
                 <li className="flex justify-between text-sm py-3">
                   Shipping
@@ -423,7 +434,8 @@ const Cart = () => {
               <div className="border-t border-[#F0BB78]/20 mt-4 pt-4">
                 <div className="flex justify-between font-bold text-lg text-white">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  {/* Changed $ to JD */}
+                  <span>{total.toFixed(2)} JD</span>
                 </div>
               </div>
 
@@ -447,7 +459,9 @@ const Cart = () => {
 
               {total < 100 && (
                 <p className="text-sm text-white/60 mt-2">
-                  Add ${(100 - total).toFixed(2)} more to unlock free shipping.
+                  {/* Changed $ to JD */}
+                  Add {(100 - total).toFixed(2)} JD more to unlock free
+                  shipping.
                 </p>
               )}
             </div>

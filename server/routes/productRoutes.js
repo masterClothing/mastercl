@@ -29,5 +29,9 @@ router.get("/:productId/occasions", productController.getOccasionsByProduct);
 // routes/productRoutes.js
 router.get("/occasions/:occasionName", productController.getProductsByOccasion);
 
+router.get("/:productId/also-bought", productController.getAlsoBoughtTogether);
+
+
+
 
 module.exports = router;

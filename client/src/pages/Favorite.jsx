@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromFavorite } from "../Slices/favoriteSlice";
 import { addToCart } from "../Slices/cartSlice";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast, Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 
 const Favorite = () => {
@@ -32,41 +32,18 @@ const Favorite = () => {
   // Handle add to cart with toast notification
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    toast.success(`${product.name} added to cart!`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    toast.success(`${product.name} added to cart!`, { duration: 3000 });
   };
 
   // Handle remove from favorites with toast notification
   const handleRemoveFromFavorite = (id, name) => {
     dispatch(removeFromFavorite(id));
-    toast.info(`${name} removed from favorites`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      className: "toast-info-container",
-      bodyClassName: "toast-info-body",
-    });
+    toast(`${name} removed from favorites`, { icon: "🗑️" });
   };
 
   // Handle navigation with toast notification
   const handleNavigation = (path, message) => {
-    toast.info(message, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    toast(message, { duration: 2000 });
 
     // Navigate after a short delay to allow the toast to be visible
     setTimeout(() => {
@@ -76,8 +53,22 @@ const Favorite = () => {
 
   return (
     <div className="font-sans bg-white min-h-screen p-6">
-      {/* Toast Container */}
-      <ToastContainer />
+      {/* Toast Container with the same styling as Trending component */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#FFFFFF",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            borderLeft: "4px solid #F0BB78",
+          },
+          iconTheme: {
+            primary: "#F0BB78",
+            secondary: "#FFFFFF",
+          },
+        }}
+      />
 
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
@@ -130,7 +121,7 @@ const Favorite = () => {
               </p>
               <button
                 onClick={() =>
-                  handleNavigation("/shop", "Taking you to our shop...")
+                  handleNavigation("/products", "Taking you to our shop...")
                 }
                 className="mt-6 bg-[#F0BB78] text-black hover:bg-[#F0BB78]/90 px-6 py-3 rounded-lg font-medium transition-colors"
               >
@@ -148,13 +139,8 @@ const Favorite = () => {
                 <div
                   className="relative overflow-hidden cursor-pointer"
                   onClick={() => {
-                    toast.info(`Viewing ${item.name} details...`, {
-                      position: "top-right",
-                      autoClose: 2000,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
+                    toast(`Viewing ${item.name} details...`, {
+                      duration: 2000,
                     });
                     navigate(`/product/${item.id}`, { state: { item } });
                   }}
@@ -187,11 +173,11 @@ const Favorite = () => {
 
                     <div className="flex items-center gap-2 mt-3">
                       <h6 className="text-xl font-bold text-[#F0BB78]">
-                        ${item.price}
+                        {item.price} JD
                       </h6>
                       {item.oldPrice && (
                         <h6 className="text-sm text-white/50">
-                          <strike>${item.oldPrice}</strike>
+                          <strike>{item.oldPrice} JD</strike>
                         </h6>
                       )}
                     </div>

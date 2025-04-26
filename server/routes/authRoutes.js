@@ -6,6 +6,7 @@ const {
   logout,
   googleLogin,
   adminLogin,
+  updateProfile, 
 } = require("../controllers/authController");
 const authMiddleware = require("../middleware/authMiddleware");
 
@@ -16,6 +17,7 @@ router.post("/google-login", googleLogin);
 router.post("/register", signup);
 router.post("/login", login);
 router.get("/profile", authMiddleware, getProfile);
+router.put ("/profile", authMiddleware, updateProfile);  // update  ⬅️ new line
 router.post("/logout", logout);
 router.post("/admin/login", adminLogin);
 
