@@ -4,8 +4,7 @@ import { fetchWomenProducts } from "../../Slices/womenSlice";
 import { addToCart } from "../../Slices/cartSlice";
 import { addToFavorite, removeFromFavorite } from "../../Slices/favoriteSlice";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster, toast } from "react-hot-toast";
 
 const Women = () => {
   const dispatch = useDispatch();
@@ -61,38 +60,17 @@ const Women = () => {
   // Handle add to cart with toast
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
-    toast.success(`${product.name} added to cart!`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    toast.success(`${product.name} added to cart!`, { duration: 3000 });
   };
 
   // Handle wishlist toggle with toast
   const handleFavoriteToggle = (product, isFavorite) => {
     if (isFavorite) {
       dispatch(removeFromFavorite(product.id));
-      toast.info(`${product.name} removed from wishlist`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast("Removed from wishlist", { icon: "🗑️" });
     } else {
       dispatch(addToFavorite(product));
-      toast.success(`${product.name} added to wishlist!`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.success(`${product.name} added to wishlist!`, { duration: 3000 });
     }
   };
 
@@ -102,8 +80,22 @@ const Women = () => {
       <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-[#F0BB78]/5 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#F0BB78]/5 blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
-      {/* Toast Container */}
-      <ToastContainer position="top-right" autoClose={3000} />
+      {/* Toaster Configuration */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#FFFFFF",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            borderLeft: "4px solid #F0BB78",
+          },
+          iconTheme: {
+            primary: "#F0BB78",
+            secondary: "#FFFFFF",
+          },
+        }}
+      />
 
       {/* Hero Section */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pt-24 pb-16">
@@ -176,7 +168,7 @@ const Women = () => {
             </h3>
             <div className="mb-4">
               <label className="block text-sm font-medium text-white/80 mb-2">
-                Price Range: ${priceRange}
+                Price Range: {priceRange} JD
               </label>
               <input
                 type="range"
@@ -188,8 +180,8 @@ const Women = () => {
                 className="w-full h-2 bg-[#F0BB78]/20 rounded-lg appearance-none cursor-pointer"
               />
               <div className="flex justify-between text-xs text-white/50 mt-1">
-                <span>$0</span>
-                <span>$1000</span>
+                <span>0 JD</span>
+                <span>1000 JD</span>
               </div>
             </div>
           </div>
@@ -227,7 +219,7 @@ const Women = () => {
 
         {/* Products Grid */}
         {!loading && !error && currentProducts.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
             {currentProducts.map((product) => {
               const isFavorite = favoriteItems.some(
                 (fav) => fav.id === product.id
@@ -267,7 +259,7 @@ const Women = () => {
                     )}
 
                     {/* Quick Actions Overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
                       <button
                         className="bg-[#181818] text-white p-3 rounded-full shadow-lg mx-2 hover:bg-[#F0BB78]/20 transition transform hover:scale-105 duration-300"
                         title="Quick view"
@@ -313,11 +305,11 @@ const Women = () => {
 
                     <div className="flex items-center mt-3">
                       <h6 className="text-base sm:text-lg font-bold text-[#F0BB78]">
-                        ${product.price}
+                        {product.price} JD
                       </h6>
                       {hasDiscount && (
                         <h6 className="ml-2 text-sm text-gray-400 line-through">
-                          ${product.oldPrice}
+                          {product.oldPrice} JD
                         </h6>
                       )}
                     </div>

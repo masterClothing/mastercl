@@ -38,9 +38,9 @@ const CategoryCard = ({
   isInView = false,
 }) => {
   const cardStyles = {
-    featured: "lg:col-span-2 lg:h-96",
-    standard: "h-80",
-    compact: "h-64",
+    featured: "lg:col-span-2 lg:h-96 h-72", // Added default height for mobile
+    standard: "h-72 sm:h-80", // Adjusted height for better mobile display
+    compact: "h-56 sm:h-64", // Adjusted height for better mobile display
   };
 
   return (
@@ -71,10 +71,10 @@ const CategoryCard = ({
 
       {/* Sale badge */}
       {isSale && (
-        <div className="absolute top-4 right-4 z-30 rotate-12 transform transition-all duration-500 group-hover:rotate-0 group-hover:scale-110">
-          <div className="bg-[#F0BB78] text-[#000000] font-bold py-1.5 px-4 rounded-full shadow-[0_0_20px_rgba(240,187,120,0.4)] flex items-center">
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-30 rotate-12 transform transition-all duration-500 group-hover:rotate-0 group-hover:scale-110">
+          <div className="bg-[#F0BB78] text-[#000000] font-bold py-1 px-3 sm:py-1.5 sm:px-4 rounded-full shadow-[0_0_20px_rgba(240,187,120,0.4)] flex items-center text-xs sm:text-sm">
             <svg
-              className="w-4 h-4 mr-1 animate-pulse"
+              className="w-3 h-3 sm:w-4 sm:h-4 mr-1 animate-pulse"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +87,7 @@ const CategoryCard = ({
             </svg>
             <span>SALE</span>
             {saleText && (
-              <span className="ml-1 text-xs font-normal bg-white text-[#000000] px-1.5 py-0.5 rounded-sm shadow-inner">
+              <span className="ml-1 text-xs font-normal bg-white text-[#000000] px-1 py-0.5 sm:px-1.5 sm:py-0.5 rounded-sm shadow-inner">
                 {saleText}
               </span>
             )}
@@ -96,12 +96,12 @@ const CategoryCard = ({
       )}
 
       {/* Card content */}
-      <div className="absolute inset-0 p-6 flex flex-col justify-between z-20">
+      <div className="absolute inset-0 p-4 sm:p-6 flex flex-col justify-between z-20">
         <div>
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-[#F0BB78] text-[#000000] mb-2 shadow-md backdrop-blur-sm transform translate-y-1 opacity-80 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
+          <span className="inline-block px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-medium bg-[#F0BB78] text-[#000000] mb-2 shadow-md backdrop-blur-sm transform translate-y-1 opacity-80 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
             {category}
           </span>
-          <h3 className="text-2xl lg:text-3xl font-bold text-white group-hover:text-[#F0BB78] transition-colors duration-500 drop-shadow-md transform group-hover:-translate-y-1">
+          <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white group-hover:text-[#F0BB78] transition-colors duration-500 drop-shadow-md transform group-hover:-translate-y-1">
             {title}
           </h3>
         </div>
@@ -110,10 +110,10 @@ const CategoryCard = ({
             to={link}
             className="self-start mt-4 transform translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700"
           >
-            <button className="bg-[#F0BB78] text-[#000000] font-semibold py-3 px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center">
+            <button className="bg-[#F0BB78] text-[#000000] font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center text-sm sm:text-base">
               <span>{cta}</span>
               <svg
-                className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
+                className="w-3 h-3 sm:w-4 sm:h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -274,7 +274,7 @@ const CategorySection = () => {
         categoryCount !== null ? categoryCount.toLocaleString() : "Loading...",
       icon: (
         <svg
-          className="w-6 h-6 text-[#F0BB78]"
+          className="w-5 h-5 sm:w-6 sm:h-6 text-[#F0BB78]"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -288,7 +288,7 @@ const CategorySection = () => {
         productCount !== null ? productCount.toLocaleString() : "Loading...",
       icon: (
         <svg
-          className="w-6 h-6 text-[#F0BB78]"
+          className="w-5 h-5 sm:w-6 sm:h-6 text-[#F0BB78]"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -300,16 +300,16 @@ const CategorySection = () => {
         </svg>
       ),
     },
-   
+
     {
-      label: "Happy Customers",
+      label: "Customers",
       value:
         happyCustomerCount !== null
           ? happyCustomerCount.toLocaleString()
           : "Loading...",
       icon: (
         <svg
-          className="w-6 h-6 text-[#F0BB78]"
+          className="w-5 h-5 sm:w-6 sm:h-6 text-[#F0BB78]"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -326,7 +326,7 @@ const CategorySection = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b bg-[#ffffff] relative overflow-hidden"
+      className="py-12 sm:py-16 md:py-24 bg-gradient-to-b bg-[#ffffff] relative overflow-hidden"
     >
       {/* Background decorative elements */}
       <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-[#F0BB78]/5 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
@@ -334,22 +334,22 @@ const CategorySection = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-sm font-semibold tracking-wide uppercase shadow-sm">
+        <div className="text-center mb-10 sm:mb-16">
+          <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-xs sm:text-sm font-semibold tracking-wide uppercase shadow-sm">
             Collections
           </span>
-          <h2 className="mt-4 text-4xl sm:text-5xl font-bold text-black leading-tight">
+          <h2 className="mt-3 sm:mt-4 text-3xl sm:text-4xl md:text-5xl font-bold text-black leading-tight">
             Explore Categories
           </h2>
-          <div className="mt-4 mx-auto h-1 w-24 bg-[#F0BB78] rounded-full shadow-lg"></div>
-          <p className="mt-8 text-xl text-black max-w-2xl mx-auto leading-relaxed">
+          <div className="mt-3 sm:mt-4 mx-auto h-1 w-16 sm:w-24 bg-[#F0BB78] rounded-full shadow-lg"></div>
+          <p className="mt-6 sm:mt-8 text-lg sm:text-xl text-black max-w-2xl mx-auto leading-relaxed px-2">
             Discover our carefully curated collection of premium products
             designed to elevate your style and enhance your lifestyle.
           </p>
         </div>
 
         {/* Category grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {categories.map((category, index) => (
             <div
               key={category.title}
@@ -366,19 +366,19 @@ const CategorySection = () => {
 
         {/* Stats section */}
         <div
-          className={`mt-20 bg-[#181818]  rounded-2xl p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-sm transform transition-all duration-700 ${
+          className={`mt-12 sm:mt-16 md:mt-20 bg-[#181818] rounded-2xl p-6 sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] backdrop-blur-sm transform transition-all duration-700 ${
             sectionInView
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
           }`}
           style={{ transitionDelay: "500ms" }}
         >
-          <div className="flex flex-col md:flex-row items-center ">
-            <div className="md:w-1/3 mb-8 md:mb-0 ">
-              <div className="bg-[#252525] p-2 rounded-full inline-block shadow-xl ">
-                <div className="bg-[#F0BB78] p-4 rounded-full shadow-inner ">
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="md:w-1/3 mb-6 sm:mb-8 md:mb-0 text-center md:text-left">
+              <div className="bg-[#252525] p-2 rounded-full inline-block shadow-xl">
+                <div className="bg-[#F0BB78] p-3 sm:p-4 rounded-full shadow-inner">
                   <svg
-                    className="w-12 h-12 text-[#000000] "
+                    className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-[#000000]"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -390,30 +390,32 @@ const CategorySection = () => {
                   </svg>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mt-6 text-white ">
+              <h3 className="text-xl sm:text-2xl font-bold mt-4 sm:mt-6 text-white">
                 Elitefit Stats
               </h3>
-              <p className="text-white/70 mt-2 ">
+              <p className="text-white/70 mt-2 text-sm sm:text-base px-4 md:px-0">
                 We take pride in our commitment to quality and customer
                 satisfaction. Here are some numbers that reflect our dedication
                 to excellence.
               </p>
             </div>
-            <div className="md:w-2/3 md:pl-12 grid grid-cols-2 gap-4 md:grid-cols-3 ml-30">
+            <div className="w-full md:w-2/3 md:pl-8 lg:pl-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="bg-[#252525] p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:bg-[#303030] transform hover:-translate-y-1"
+                  className="bg-[#252525] p-3 sm:p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:bg-[#303030] transform hover:-translate-y-1"
                 >
-                  <div className="flex items-center justify-center">
-                    <div className="h-10 w-10 bg-[#F0BB78]/20 text-[#F0BB78] rounded-full flex items-center justify-center mr-3 shadow-[0_0_10px_rgba(240,187,120,0.2)]">
+                  <div className="flex items-center justify-center sm:justify-start">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 bg-[#F0BB78]/20 text-[#F0BB78] rounded-full flex items-center justify-center mr-3 shadow-[0_0_10px_rgba(240,187,120,0.2)]">
                       {stat.icon}
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-white">
+                      <p className="text-xl sm:text-2xl font-bold text-white">
                         {stat.value}
                       </p>
-                      <p className="text-sm text-white/60">{stat.label}</p>
+                      <p className="text-xs sm:text-sm text-white/60">
+                        {stat.label}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -424,25 +426,25 @@ const CategorySection = () => {
 
         {/* CTA Banner */}
         <div
-          className={`mt-16 bg-gradient-to-r from-[#181818] to-[#252525] rounded-xl p-8 text-white shadow-[0_15px_35px_rgba(0,0,0,0.4)] transform hover:scale-[1.02] transition-all duration-300 ${
+          className={`mt-10 sm:mt-12 md:mt-16 bg-gradient-to-r from-[#181818] to-[#252525] rounded-xl p-6 sm:p-8 text-white shadow-[0_15px_35px_rgba(0,0,0,0.4)] transform hover:scale-[1.02] transition-all duration-300 ${
             sectionInView
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
           }`}
           style={{ transitionDelay: "600ms" }}
         >
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center text-center md:text-left">
             <div>
-              <h3 className="text-2xl font-bold mb-4">
+              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
                 Ready to explore our collections?
               </h3>
-              <p className="mb-6 md:mb-0 text-[#F0BB78]/90">
+              <p className="mb-6 md:mb-0 text-[#F0BB78]/90 text-sm sm:text-base">
                 Discover premium products that match your unique style.
               </p>
             </div>
             <Link
               to="/products"
-              className="bg-[#F0BB78] text-[#000000] font-semibold py-3 px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
+              className="bg-[#F0BB78] text-[#000000] font-semibold py-2.5 sm:py-3 px-5 sm:px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center justify-center"
             >
               <span>Browse All Categories</span>
               <svg

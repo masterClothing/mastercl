@@ -186,3 +186,44 @@ exports.adminLogin = async (req, res) => {
     res.status(500).json({ message: "Server error during admin login" });
   }
 };
+
+
+// controllers/userController.js
+exports.updateProfile = async (req, res) => {
+  try {
+    // 1. Pull the fields the client is allowed to change
+    const { firstName, lastName, email } = req.body;
+
+    // 2. Fetch the current user
+    const user = await User.findByPk(req.user.userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // 3. Update only the fields that were sent
+    if (firstName !== undefined) user.firstName = firstName.trim();
+    if (lastName  !== undefined) user.lastName  = lastName.trim();
+    if (email     !== undefined) user.email     = email.trim().toLowerCase();
+
+    // 4. Save changes to the database
+    await user.save();
+
+    // 5. Respond with the fresh profile
+    res.json({
+      success: true,
+      user: {
+        id:        user.id,
+        firstName: user.firstName,
+        lastName:  user.lastName,
+        email:     user.email,
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};

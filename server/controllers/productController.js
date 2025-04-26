@@ -1,8 +1,14 @@
-const { Product, Category, Occasion } = require("../models");
+const { Op } = require("sequelize");
+const { Product, Category, Occasion, Order } = require("../models");
 
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.findAll();
+    // Fetch products where the status is true (active)
+    const products = await Product.findAll({
+      where: {
+        status: true, // Only get products with status 'true'
+      },
+    });
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: "خطأ أثناء جلب المنتجات", error });
@@ -76,7 +82,6 @@ exports.getNewArrivals = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 exports.getNewSale = async (req, res) => {
   try {
@@ -197,6 +202,56 @@ exports.getProductsByOccasion = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "خطأ أثناء جلب المنتجات للمناسبة",
+      error: error.message,
+    });
+  }
+};
+
+// GET /products/:productId/also-bought
+exports.getAlsoBoughtTogether = async (req, res) => {
+  try {
+    const productId = Number(req.params.productId);
+
+    if (!productId) {
+      return res.status(400).json({ message: "معرّف منتج غير صالح" });
+    }
+
+    /* 1️⃣  Find all orders that include this product */
+    const orders = await Order.findAll({
+      attributes: ["productIds"],
+      where: { productIds: { [Op.contains]: [productId] } }, //  @> ARRAY[productId]
+    });
+
+    if (orders.length === 0) {
+      return res.json({ success: true, data: [] }); // No history yet
+    }
+
+    /* 2️⃣  Extract every other product ID from those orders */
+    const otherIds = new Set();
+    orders.forEach(({ productIds }) => {
+      productIds.forEach((id) => {
+        if (id !== productId) otherIds.add(id);
+      });
+    });
+
+    if (otherIds.size === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    /* 3️⃣  Fetch full product rows (only active products) */
+    const products = await Product.findAll({
+      where: {
+        id: { [Op.in]: Array.from(otherIds) },
+        status: true,
+      },
+    });
+
+    res.json({ success: true, data: products });
+  } catch (error) {
+    console.error("🔥 Error in getAlsoBoughtTogether:", error);
+    res.status(500).json({
+      success: false,
+      message: "خطأ أثناء جلب المنتجات المتعلقة",
       error: error.message,
     });
   }

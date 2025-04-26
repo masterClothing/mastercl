@@ -4,8 +4,7 @@ import { fetchAllProducts } from "../../Slices/allProductsSlice";
 import { addToCart } from "../../Slices/cartSlice";
 import { addToFavorite, removeFromFavorite } from "../../Slices/favoriteSlice";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster, toast } from "react-hot-toast";
 
 const AllProducts = () => {
   const dispatch = useDispatch();
@@ -216,7 +215,7 @@ const AllProducts = () => {
   const handleAddToCart = (e, item) => {
     e.stopPropagation();
     dispatch(addToCart(item));
-    toast.success("تمت الإضافة إلى السلة!");
+    toast.success("Product added to cart", { duration: 3000 });
   };
 
   // Favorite toggle handler
@@ -224,10 +223,10 @@ const AllProducts = () => {
     e.stopPropagation();
     if (isFavorite) {
       dispatch(removeFromFavorite(item.id));
-      toast.info("تمت الإزالة من المفضلة.");
+      toast("Removed from favorites", { icon: "🗑️" });
     } else {
       dispatch(addToFavorite(item));
-      toast.success("تمت الإضافة إلى المفضلة!");
+      toast.success("Added to favorites", { duration: 3000 });
     }
   };
 
@@ -256,10 +255,25 @@ const AllProducts = () => {
       <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-[#F0BB78]/5 blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-[#F0BB78]/5 blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
-      {/* Container */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative">
-        <ToastContainer position="top-right" autoClose={3000} />
+      {/* Toast Configuration */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#FFFFFF",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            borderLeft: "4px solid #F0BB78",
+          },
+          iconTheme: {
+            primary: "#F0BB78",
+            secondary: "#FFFFFF",
+          },
+        }}
+      />
 
+      {/* Container */}
+      <div className="container mx-auto px-4 sm:px-6  w-full relative">
         {/* Page Header */}
         <div className="text-center mb-12">
           <span className="inline-block px-3 py-1 bg-[#F0BB78] text-black rounded-full text-sm font-semibold tracking-wide uppercase shadow-sm">
@@ -396,20 +410,7 @@ const AllProducts = () => {
               </div>
             </div>
 
-            {/* Status Filter */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Status</label>
-              <select
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-                className="w-full px-3 py-2 bg-[#262626] border border-[#363636] rounded-md focus:outline-none focus:ring-1 focus:ring-[#F0BB78] text-white"
-              >
-                <option value="">All Products</option>
-                <option value="active">Active Only</option>
-                <option value="inactive">Inactive Only</option>
-              </select>
-            </div>
+          
 
             {/* New Arrivals Filter */}
             <div className="mb-6">
@@ -500,8 +501,8 @@ const AllProducts = () => {
                 )}
                 {(filters.price.min || filters.price.max) && (
                   <span className="inline-flex items-center bg-[#262626] text-white px-3 py-1 rounded-full text-sm">
-                    Price: {filters.price.min ? `$${filters.price.min}` : "$0"}{" "}
-                    - {filters.price.max ? `$${filters.price.max}` : "any"}
+                    Price: {filters.price.min ? `${filters.price.min} JD` : "0JD"}{" "}
+                    - {filters.price.max ? `${filters.price.max} JD` : "any"}
                     <button
                       onClick={() =>
                         setFilters({ ...filters, price: { min: "", max: "" } })
@@ -583,7 +584,7 @@ const AllProducts = () => {
                         )}
                       </div>
                       {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
                         <button
                           className="bg-[#181818] text-white p-3 rounded-full shadow-lg mx-2 hover:bg-[#F0BB78]/20 transition transform hover:scale-105 duration-300"
                           title="Quick view"
@@ -626,11 +627,11 @@ const AllProducts = () => {
                       </p>
                       <div className="flex items-center mt-3">
                         <h6 className="text-base sm:text-lg font-bold text-[#F0BB78]">
-                          ${item.price}
+                          {item.price} JD
                         </h6>
                         {hasDiscount && (
                           <h6 className="ml-2 text-sm text-gray-400 line-through">
-                            ${item.oldPrice}
+                            {item.oldPrice} JD
                           </h6>
                         )}
                       </div>

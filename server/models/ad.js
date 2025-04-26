@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Ad.init(
     {
+      status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
       description: DataTypes.STRING,
     },
     {

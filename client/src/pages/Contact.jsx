@@ -161,15 +161,15 @@ const Contact = () => {
               <h2 className="text-3xl font-bold mb-8">Get In Touch</h2>
               <div className="flex items-center mb-4">
                 <Phone className="h-5 w-5 mr-3" />
-                <span>(123) 456-7890</span>
+                <span>(962)780181169</span>
               </div>
               <div className="flex items-center mb-4">
                 <Mail className="h-5 w-5 mr-3" />
-                <span>info@example.com</span>
+                <span>EliteFit@info.com</span>
               </div>
               <div className="flex items-center mb-4">
                 <MapPin className="h-5 w-5 mr-3" />
-                <span>1234 Example St, City, Country</span>
+                <span>Jordan, Zarqa</span>
               </div>
               <div className="flex items-center mb-4">
                 <Clock className="h-5 w-5 mr-3" />
@@ -244,7 +244,7 @@ const Contact = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-[#303030] bg-[#252525] text-white rounded-lg focus:ring-2 focus:ring-[#F0BB78] focus:border-[#F0BB78]"
-                      placeholder="+1 (123) 456-7890"
+                      placeholder="+(962) 780181169"
                     />
                   </div>
 

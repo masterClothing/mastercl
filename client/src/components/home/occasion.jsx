@@ -27,7 +27,7 @@ const occasions = [
     tagline: "Sophisticated & Refined",
   },
   {
-    name: "Sport",
+    name: "Sports",
     image: photooccasion4,
     description: "Performance wear for your active lifestyle",
     tagline: "Dynamic & Functional",
@@ -161,25 +161,7 @@ const Occasion = () => {
                 Discover curated collections for every season with exclusive
                 discounts and early access to new arrivals.
               </p>
-              <button
-                onClick={() => navigate("/seasonal-specials")}
-                className="bg-[#F0BB78] text-[#000000] font-semibold py-3 px-6 rounded-lg hover:shadow-[0_5px_15px_rgba(240,187,120,0.4)] transition-all duration-300 transform hover:-translate-y-1 flex items-center"
-              >
-                View Seasonal Offers
-                <svg
-                  className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button>
+            
             </div>
             {/* Decorative Elements */}
             <div className="absolute right-0 bottom-0 h-64 w-64 bg-[#F0BB78] opacity-5 rounded-full -mb-16 -mr-16"></div>
