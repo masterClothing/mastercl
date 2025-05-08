@@ -13,7 +13,7 @@ import Logo from "../assets/elitefit-logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setSearchQuery, setIsSearching } from "../Slices/searchSlice";
-import { searchProducts } from "../api/products";
+import { clearCart } from "../Slices/cartSlice";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -129,6 +129,8 @@ const NavBar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("persist:root");
+    dispatch(clearCart());
     setIsLoggedIn(false);
     navigate("/");
   };

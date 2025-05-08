@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const SuggestedProducts = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchPopularProducts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/orders/popular-products"
+        );
+        setProducts(response.data.products || []);
+      } catch (error) {
+        console.error("Failed to fetch popular products:", error);
+      }
+    };
+
+    fetchPopularProducts();
+  }, []);
+
   return (
     <div className="mt-12 bg-white rounded-2xl shadow-lg p-8">
       <h2 className="text-2xl font-bold mb-8 text-black flex items-center">
@@ -22,15 +40,17 @@ const SuggestedProducts = () => {
       </h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        {[1, 2, 3, 4].map((index) => (
-          <div key={index} className="group">
+        {products.map((product) => (
+          <div key={product.id} className="group">
             <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-all">
               <img
-                src={`/api/placeholder/300/300`}
+                src={`http://localhost:5000/${product.image.replace(
+                  /\\/g,
+                  "/"
+                )}`}
                 className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                alt={`Related product ${index}`}
+                alt={product.name}
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
               <button className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 hover:bg-gray-100">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -55,11 +75,13 @@ const SuggestedProducts = () => {
             </div>
             <div className="mt-3 px-1">
               <h3 className="text-sm font-medium text-black truncate">
-                Premium Product {index}
+                {product.name}
               </h3>
-              <p className="text-gray-500 text-xs mt-1">Luxury Collection</p>
+              <p className="text-gray-500 text-xs mt-1">
+                {product.description}
+              </p>
               <div className="mt-1 font-medium text-black">
-                {(99.99 - index * 10).toFixed(2)} JD
+                {parseFloat(product.price).toFixed(2)} JD
               </div>
             </div>
           </div>

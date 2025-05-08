@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import photo1 from "../../assets/Images/AI-body.png";
 import photo2 from "../../assets/Images/smartOutfit.png";
+import { Link } from "react-router-dom";
 
 const technologies = [
   {
@@ -217,7 +217,10 @@ const Technology = () => {
                       4.9/5 Customer Rating
                     </span>
                   </div>
-                  <button className="inline-flex items-center px-5 py-2 bg-[#F0BB78] text-[#000000] text-sm font-medium rounded-lg hover:bg-[#D9A768] transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                  <Link
+                    to="/ai"
+                    className="inline-flex items-center px-5 py-2 bg-[#F0BB78] text-[#000000] text-sm font-medium rounded-lg hover:bg-[#D9A768] transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  >
                     Learn More
                     <svg
                       className="w-4 h-4 ml-2"
@@ -232,7 +235,7 @@ const Technology = () => {
                         d="M9 5l7 7-7 7"
                       />
                     </svg>
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -240,7 +243,6 @@ const Technology = () => {
         </div>
 
         {/* Testimonial Section */}
-       
       </div>
     </section>
   );
