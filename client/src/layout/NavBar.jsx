@@ -7,6 +7,7 @@ import {
   Heart,
   User,
   LogOut,
+  ChevronDown,
 } from "lucide-react";
 import Logo from "../assets/elitefit-logo.svg";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,8 +21,10 @@ const NavBar = () => {
   const [ads, setAds] = useState([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
+  const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false);
   const searchPopupRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const shopDropdownRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,6 +50,24 @@ const NavBar = () => {
         !event.target.closest("[data-search-trigger]")
       ) {
         setIsSearchPopupOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Close shop dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        shopDropdownRef.current &&
+        !shopDropdownRef.current.contains(event.target) &&
+        !event.target.closest("[data-shop-dropdown-trigger]")
+      ) {
+        setIsShopDropdownOpen(false);
       }
     };
 
@@ -103,6 +124,7 @@ const NavBar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleSearchPopup = () => setIsSearchPopupOpen(!isSearchPopupOpen);
+  const toggleShopDropdown = () => setIsShopDropdownOpen(!isShopDropdownOpen);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -162,6 +184,15 @@ const NavBar = () => {
       </section>
     );
   }
+
+  // Shop dropdown categories
+  const shopCategories = [
+    { name: "New Arrivals", path: "/new" },
+    { name: "Men", path: "/men" },
+    { name: "Women", path: "/women" },
+    { name: "Kids", path: "/kids" },
+    { name: "Sale", path: "/sale" },
+  ];
 
   return (
     <>
@@ -288,6 +319,7 @@ const NavBar = () => {
                 Home
               </Link>
             </li>
+
             <li className="px-3">
               <Link
                 to="/products"
@@ -296,46 +328,38 @@ const NavBar = () => {
                 All Products
               </Link>
             </li>
-            <li className="px-3">
-              <Link
-                to="/new"
-                className="text-black text-[15px] font-medium block"
+
+            {/* Shop Dropdown */}
+            <li className="px-3 relative">
+              <button
+                className="text-black text-[15px] font-medium flex items-center gap-1"
+                onClick={toggleShopDropdown}
+                data-shop-dropdown-trigger
               >
-                New Arrivals
-              </Link>
+                Shop
+                <ChevronDown className="w-4 h-4" />
+              </button>
+
+              {/* Shop Dropdown Menu */}
+              {isShopDropdownOpen && (
+                <div
+                  ref={shopDropdownRef}
+                  className="absolute left-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-2"
+                >
+                  {shopCategories.map((category, index) => (
+                    <Link
+                      key={index}
+                      to={category.path}
+                      className="block px-4 py-2 text-[14px] text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                      onClick={() => setIsShopDropdownOpen(false)}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </li>
-            <li className="px-3">
-              <Link
-                to="/men"
-                className="text-black text-[15px] font-medium block"
-              >
-                Men
-              </Link>
-            </li>
-            <li className="px-3">
-              <Link
-                to="/women"
-                className="text-black text-[15px] font-medium block"
-              >
-                Women
-              </Link>
-            </li>
-            <li className="px-3">
-              <Link
-                to="/kids"
-                className="text-black text-[15px] font-medium block"
-              >
-                Kids
-              </Link>
-            </li>
-            <li className="px-3">
-              <Link
-                to="/sale"
-                className="text-black text-[15px] font-medium block"
-              >
-                Sale
-              </Link>
-            </li>
+
             <li className="px-3">
               <Link
                 to="/contact"
@@ -457,6 +481,8 @@ const NavBar = () => {
                     Home
                   </Link>
                 </li>
+
+                {/* All Products link outside dropdown in mobile menu */}
                 <li className="border-b py-3">
                   <Link
                     to="/products"
@@ -466,51 +492,20 @@ const NavBar = () => {
                     All Products
                   </Link>
                 </li>
-                <li className="border-b py-3">
-                  <Link
-                    to="/new"
-                    className="text-black text-[15px] font-medium block"
-                    onClick={handleMobileNavLinkClick}
-                  >
-                    New Arrivals
-                  </Link>
-                </li>
-                <li className="border-b py-3">
-                  <Link
-                    to="/men"
-                    className="text-black text-[15px] font-medium block"
-                    onClick={handleMobileNavLinkClick}
-                  >
-                    Men
-                  </Link>
-                </li>
-                <li className="border-b py-3">
-                  <Link
-                    to="/women"
-                    className="text-black text-[15px] font-medium block"
-                    onClick={handleMobileNavLinkClick}
-                  >
-                    Women
-                  </Link>
-                </li>
-                <li className="border-b py-3">
-                  <Link
-                    to="/kids"
-                    className="text-black text-[15px] font-medium block"
-                    onClick={handleMobileNavLinkClick}
-                  >
-                    Kids
-                  </Link>
-                </li>
-                <li className="border-b py-3">
-                  <Link
-                    to="/sale"
-                    className="text-black text-[15px] font-medium block"
-                    onClick={handleMobileNavLinkClick}
-                  >
-                    Sale
-                  </Link>
-                </li>
+
+                {/* Mobile Shop Categories */}
+                {shopCategories.map((category, index) => (
+                  <li key={index} className="border-b py-3">
+                    <Link
+                      to={category.path}
+                      className="text-black text-[15px] font-medium block"
+                      onClick={handleMobileNavLinkClick}
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
+
                 <li className="border-b py-3">
                   <Link
                     to="/contact"

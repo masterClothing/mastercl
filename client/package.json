@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/pose": "^0.5.1675469404",
     "@paypal/paypal-js": "^8.2.0",
     "@paypal/react-paypal-js": "^8.8.2",
     "@reduxjs/toolkit": "^2.6.0",
@@ -30,6 +33,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
+    "redux-persist": "^6.0.0",
     "sweetalert2": "^11.17.2",
     "swiper": "^11.2.1",
     "yup": "^1.6.1"
