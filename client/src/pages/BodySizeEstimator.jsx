@@ -2,6 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { Pose } from "@mediapipe/pose";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import * as cam from "@mediapipe/camera_utils";
+import {
+  ZoomIn,
+  ZoomOut,
+  Timer,
+  ArrowUp,
+  Camera,
+  Ruler,
+  Info,
+  AlertTriangle,
+} from "lucide-react";
 
 export default function BodySizeEstimator() {
   const videoRef = useRef(null);
@@ -207,7 +217,8 @@ export default function BodySizeEstimator() {
   return (
     <div className="flex flex-col items-center gap-4 p-4">
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 flex items-center">
+          <AlertTriangle className="mr-2" size={20} />
           {error}
         </div>
       )}
@@ -219,51 +230,65 @@ export default function BodySizeEstimator() {
         muted
         playsInline
       />
-      <canvas
-        ref={canvasRef}
-        className="border rounded shadow"
-        width={640}
-        height={480}
-      />
+      <div className="relative">
+        <canvas
+          ref={canvasRef}
+          className="border rounded-lg shadow-lg"
+          width={640}
+          height={480}
+        />
+        <button
+          className="fixed bottom-6 right-6 bg-[#F0BB78] text-white rounded-full p-3 shadow-lg hover:bg-[#F0BB78] z-10 hover:scale-110 transition-transform"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          aria-label="Back to top"
+        >
+          <ArrowUp size={24} />
+        </button>
+      </div>
 
       <div className="flex gap-2 mb-4">
         <button
           onClick={() => adjustCalibration(-0.5)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 flex items-center transition-colors"
         >
-          Zoom Out (-)
+          <ZoomOut size={18} className="mr-2 text-[#F0BB78]" />
+          Zoom Out
         </button>
         <button
           onClick={() => adjustCalibration(0.5)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 flex items-center transition-colors"
         >
-          Zoom In (+)
+          <ZoomIn size={18} className="mr-2 text-[#F0BB78]" />
+          Zoom In
         </button>
       </div>
 
       {!isMeasuring ? (
         <button
           onClick={startMeasurement}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-6 py-3 bg-[#F0BB78] text-white rounded-lg hover:bg-[#e4af6d] flex items-center shadow-md transition-colors"
         >
+          <Camera size={20} className="mr-2" />
           Start 5-Second Measurement
         </button>
       ) : (
-        <div className="px-4 py-2 bg-blue-100 text-blue-800 rounded">
+        <div className="px-6 py-3 bg-[#F0BB78] bg-opacity-20 text-[#F0BB78] rounded-lg flex items-center shadow-md">
+          <Timer size={20} className="mr-2 animate-pulse" />
           Measuring... {timer}s remaining
         </div>
       )}
 
-      <div className="text-left w-full max-w-md bg-white p-4 rounded shadow">
-        <p className="mb-3">
+      <div className="text-left w-full max-w-md bg-white p-6 rounded-lg shadow-md border border-gray-100">
+        <p className="mb-3 flex items-center">
+          <Ruler size={18} className="mr-2 text-[#F0BB78]" />
           <strong className="text-lg">Calibration:</strong>{" "}
-          {pixelsPerCM.toFixed(2)} pixels/cm
+          <span className="ml-2">{pixelsPerCM.toFixed(2)} pixels/cm</span>
         </p>
 
-        <div className="mb-3 p-3 bg-gray-50 rounded">
-          <p>
+        <div className="mb-3 p-4 bg-gray-50 rounded-lg">
+          <p className="mb-2">
             <strong>Shoulder Width:</strong>{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-[#F0BB78]">
               {measurements.shoulderCM ||
                 (isDetecting ? "Calculating..." : "—")}{" "}
               cm
@@ -271,27 +296,30 @@ export default function BodySizeEstimator() {
           </p>
           <p>
             <strong>Hip Width:</strong>{" "}
-            <span className="font-semibold">
+            <span className="font-semibold text-[#F0BB78]">
               {measurements.hipCM || (isDetecting ? "Calculating..." : "—")} cm
             </span>
           </p>
         </div>
 
         {finalSize && (
-          <div className="p-3 bg-green-50 rounded">
-            <p className="text-lg font-bold">
+          <div className="p-4 bg-[#F0BB78] bg-opacity-10 rounded-lg border border-[#F0BB78] border-opacity-30">
+            <p className="text-lg font-bold flex items-center">
               <strong>Nearest Size:</strong>{" "}
-              <span className="text-green-700">{finalSize}</span>
+              <span className="text-black ml-2 text-xl">{finalSize}</span>
             </p>
-            <p className="text-sm mt-1">
+            <p className="text-sm mt-1 text-gray-700">
               Shoulder: {measurements.shoulderCM}cm | Hip: {measurements.hipCM}
               cm
             </p>
           </div>
         )}
 
-        <div className="mt-4 text-sm text-gray-600">
-          <p className="font-medium">Instructions:</p>
+        <div className="mt-5 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+          <p className="font-medium flex items-center mb-2">
+            <Info size={16} className="mr-2 text-[#F0BB78]" />
+            Instructions:
+          </p>
           <ul className="list-disc pl-5 space-y-1 mt-1">
             <li>Stand 1.5-2 meters from camera</li>
             <li>Face directly forward with arms slightly away from body</li>

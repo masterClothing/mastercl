@@ -1,4 +1,3 @@
-
 // App.js
 import React, { useEffect } from "react";
 import {
@@ -64,7 +63,7 @@ function Layout() {
   function ScrollToTop() {
     const { pathname } = useLocation();
     useEffect(() => {
-      window.scroll({ behavior: "smooth", top: 0 });  
+      window.scroll({ behavior: "smooth", top: 0 });
     }, [pathname]);
     return null;
   }
@@ -97,6 +96,27 @@ function Layout() {
       </Routes>
 
       {!hideNavAndFooter && <Footer />}
+
+      <button
+        className="fixed bottom-6 right-6 bg-[#F0BB78] text-white rounded-full p-3 shadow-lg hover:bg-[#F0BB78]  z-10 hover:scale-110 transition-transform"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Back to top"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M5 15l7-7 7 7"
+          />
+        </svg>
+      </button>
     </>
   );
 }
@@ -120,13 +140,13 @@ function App() {
 function AppWrapper() {
   return (
     <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <ThemeProvider>
-        <Router>
-          <App />
-        </Router>
-      </ThemeProvider>
-    </PersistGate>
+      <PersistGate loading={null} persistor={persistor}>
+        <ThemeProvider>
+          <Router>
+            <App />
+          </Router>
+        </ThemeProvider>
+      </PersistGate>
     </Provider>
   );
 }

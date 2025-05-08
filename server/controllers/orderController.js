@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { Order, User } = require("../models"); // Import User model for email lookup
+const { Order, User, Product } = require("../models");
 const nodemailer = require("nodemailer");
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -275,8 +275,6 @@ exports.sendOrderStatusEmail = async (order, previousStatus) => {
   }
 };
 
-
-
 exports.getUserProfile = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -316,5 +314,44 @@ exports.getUserProfile = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error fetching user profile", error: error.message });
+  }
+};
+
+exports.getPopularProducts = async (req, res) => {
+  try {
+    const allOrders = await Order.findAll({
+      attributes: ["productIds"],
+    });
+
+    const productCount = {};
+
+    allOrders.forEach((order) => {
+      order.productIds.forEach((productId) => {
+        productCount[productId] = (productCount[productId] || 0) + 1;
+      });
+    });
+
+    console.log("Product Count:", productCount); // Debug log
+
+    const popularProductIds = Object.entries(productCount)
+      .filter(([_, count]) => Number(count) >= 5)
+      .map(([productId]) => parseInt(productId));
+
+    console.log("Popular Product IDs:", popularProductIds); // Debug log
+
+    if (popularProductIds.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No products ordered more than 5 times" });
+    }
+
+    const popularProducts = await Product.findAll({
+      where: { id: popularProductIds },
+    });
+
+    res.status(200).json({ products: popularProducts });
+  } catch (error) {
+    console.error("Error fetching popular products:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
